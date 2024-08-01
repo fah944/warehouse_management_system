@@ -12,8 +12,7 @@ import '../../../Bloc/manager/pending_trainer_state.dart';
 import '../../../core/utils/color_manager.dart';
 import 'beneficiary_detail_manager_screen.dart';
 import 'course_detail_manager_screen.dart';
-import 'warehouse/request_manager/presentation/view/request_category_view.dart';
-import 'warehouse/request_manager/presentation/view/request_item_view.dart';
+
 
 class RequestManagementScreen extends StatelessWidget {
   const RequestManagementScreen({super.key});
@@ -21,11 +20,7 @@ class RequestManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-<<<<<<< Updated upstream:lib/screens/Manager_Screens/request_managment.dart
-      length: 4,
-=======
-      length: 3,
->>>>>>> Stashed changes:lib/screens/Manager_Screens/Request_Managmenet_Screen/request_managment.dart
+      length: 5,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: ColorManager.bc1,
@@ -44,12 +39,9 @@ class RequestManagementScreen extends StatelessWidget {
             tabs: [
               Tab(text: 'Courses'),
               Tab(text: 'Beneficiaries'),
-<<<<<<< Updated upstream:lib/screens/Manager_Screens/request_managment.dart
+              Tab(text: 'Trainers'),
               Tab(text: 'Category'),
               Tab(text: 'Items'),
-=======
-              Tab(text: 'Trainers'),
->>>>>>> Stashed changes:lib/screens/Manager_Screens/Request_Managmenet_Screen/request_managment.dart
             ],
           ),
         ),
@@ -57,12 +49,9 @@ class RequestManagementScreen extends StatelessWidget {
           children: [
             _buildCourseTab(context),
             _buildBeneficiaryTab(context),
-<<<<<<< Updated upstream:lib/screens/Manager_Screens/request_managment.dart
+            _buildTrainersTab(context),
             const RequestCategoryView(),
             const RequestItemView(),
-=======
-            _buildTrainersTab(context),
->>>>>>> Stashed changes:lib/screens/Manager_Screens/Request_Managmenet_Screen/request_managment.dart
           ],
         ),
       ),

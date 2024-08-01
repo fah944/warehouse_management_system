@@ -20,11 +20,8 @@ class CustomTabBarView extends StatelessWidget {
       controller: tabController,
       children: [
         DashboardOverview(),
-<<<<<<< Updated upstream
         StaffsView(),
-        BeneficiaryEducation(),
         AllTypeViewManager(),
-        StaffManagement(),
         EducationScreen(),
         WareHouse(),
         RequestManagementScreen()

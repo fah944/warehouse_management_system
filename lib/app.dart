@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dio/dio.dart';
-
 import 'package:project2/Bloc/manager/pending_trainer_cubit.dart';
 import 'package:project2/Bloc/secertary/trainer/trainer_course_cubit.dart';
 import 'package:project2/services/Manager_Services/pending_trainer_service.dart';
