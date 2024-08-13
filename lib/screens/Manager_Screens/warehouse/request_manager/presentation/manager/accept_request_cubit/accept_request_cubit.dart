@@ -2,22 +2,22 @@ import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/repos/category_repo.dart';
+import '../../../data/repos/request_repo.dart';
 import 'accept_request_state.dart';
 
 class AcceptRequestCubit extends Cubit<AcceptRequestState> {
 
   static AcceptRequestCubit get(context) => BlocProvider.of(context);
 
-  AcceptRequestCubit(this.categoryRepo) : super(AcceptRequestInitial());
+  AcceptRequestCubit(this.requestRepo) : super(AcceptRequestInitial());
 
-  final CategoryRepo categoryRepo;
+  final RequestRepo requestRepo;
 
   Future<void> fetchAcceptRequest({
   required int id,
 }) async {
     emit(AcceptRequestLoading());
-    var result = await categoryRepo.fetchAcceptRequest(id: id);
+    var result = await requestRepo.fetchAcceptRequest(id: id);
 
     result.fold((failure) {
       log(failure.errorMessage);

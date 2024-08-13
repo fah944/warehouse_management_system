@@ -3,7 +3,7 @@ class UserModel {
   final String name;
   final String role;
   final String email;
-  final int number;
+  final String number;
   final String imagePath;
   final String fcmToken;
   final String createdAt;

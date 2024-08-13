@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../../core/utils/color_manager.dart';
+import '../../../../../../core/localization/app_localizations.dart';
 import '../../../../../../core/utils/service_locator.dart';
 import '../../../../../../widgets/general_widgets/common_scaffold.dart';
 import '../../../../../warehouse_home/category_warehouse/data/repos/category_repo_impl.dart';
@@ -17,7 +17,7 @@ class AllCategoryViewManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: "Categories",
+      title: AppLocalizations.of(context).translate('category_title'),
       scaffoldKey: _keyScaffold,
       body: MultiBlocProvider(
           providers: [

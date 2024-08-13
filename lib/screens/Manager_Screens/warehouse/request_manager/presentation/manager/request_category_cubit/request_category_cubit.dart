@@ -1,21 +1,24 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/repos/category_repo.dart';
+import '../../../data/repos/request_repo.dart';
 import 'request_category_state.dart';
 
 class RequestCategoryCubit extends Cubit<RequestCategoryState> {
 
   static RequestCategoryCubit get(context) => BlocProvider.of(context);
 
-  RequestCategoryCubit(this.categoryRepo) : super(RequestCategoryInitial());
+  RequestCategoryCubit(this.requestRepo) : super(RequestCategoryInitial());
 
-  final CategoryRepo categoryRepo;
+  final RequestRepo requestRepo;
 
   Future<void> fetchRequestCategories() async {
     emit(RequestCategoryLoading());
-    var result = await categoryRepo.fetchRequestCategories();
+    var result = await requestRepo.fetchRequestCategories();
 
     result.fold((failure) {
+      log(failure.errorMessage);
       emit(RequestCategoryFailure(failure.errorMessage));
     }, (showRequestCategories) {
       emit(RequestCategorySuccess(showRequestCategories));

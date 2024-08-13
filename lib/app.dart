@@ -14,6 +14,8 @@ import 'package:project2/services/auth_services.dart';
 import 'package:project2/services/stafflogin_service.dart';
 
 import 'Bloc/auth/register_cubit.dart';
+import 'core/localization/app_localizations_setup.dart';
+import 'core/localization/local_cubit/local_cubit.dart';
 import 'core/utils/app_routes.dart';
 import 'core/utils/service_locator.dart';
 import 'core/utils/theme_manager.dart';
@@ -30,6 +32,9 @@ import 'Bloc/secertary/student/student_cubit.dart';
 import 'core/utils/shared_preferences_helper.dart';
 import 'Bloc/auth/login_cubit.dart';
 import 'Bloc/auth/logout_cubit.dart';
+import 'screens/Manager_Screens/warehouse/request_manager/data/repos/request_repo_impl.dart';
+import 'screens/Manager_Screens/warehouse/request_manager/presentation/manager/request_category_cubit/request_category_cubit.dart';
+import 'screens/Manager_Screens/warehouse/request_manager/presentation/manager/request_items_cubit/request_items_cubit.dart';
 import 'screens/login/login_screen.dart';
 import 'screens/staff/data/repos/staff_repo_impl.dart';
 import 'screens/staff/presentation/manger/featured_staff_cubit/featured_staff_cubit.dart';
@@ -40,16 +45,141 @@ import 'package:project2/services/manger_profile_service.dart';
 import 'Bloc/profile/user_profile_cubit.dart';
 import 'screens/warehouse_home/category_warehouse/data/repos/category_repo_impl.dart';
 import 'screens/warehouse_home/category_warehouse/presentation/manager/create_category_cubit/create_category_cubit.dart';
-import 'screens/warehouse_home/category_warehouse/presentation/manager/request_category_cubit/request_category_cubit.dart';
-import 'screens/warehouse_home/category_warehouse/presentation/manager/request_items_cubit/request_items_cubit.dart';
 import 'screens/warehouse_home/category_warehouse/presentation/manager/update_category_cubit/update_category_cubit.dart';
+import 'screens/warehouse_home/item_warehouse/data/repos/item_repo_impl.dart';
+import 'screens/warehouse_home/item_warehouse/presentation/manager/consume_item_cubit/consume_item_cubit.dart';
 import 'screens/warehouse_home/type_warehouse/data/repos/type_repo_impl.dart';
 import 'screens/warehouse_home/type_warehouse/presentation/manager/create_type_cubit/create_type_cubit.dart';
 import 'screens/warehouse_home/type_warehouse/presentation/manager/get_all_type_cubit/get_all_type_cubit.dart';
 import 'services/login_service.dart';
 
-
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => UserProfileCubit(MangerProfileService())),
+        BlocProvider(create: (context) => RegisterCubit(RegisterService())),
+        BlocProvider(create: (context) => LoginCubit(LoginService())),
+        BlocProvider(create: (context) => LogoutCubit(LoginService())),
+        BlocProvider(create: (context) => StaffLoginCubit(StaffLoginService())),
+        BlocProvider(create: (context) => CourseCubit(CourseService())),
+        BlocProvider(create: (context) => PendingRequestCubit(PendingRequestService())),
+        BlocProvider(create: (context) => CourseDetailCubit(CourseService())),
+        BlocProvider(create: (context) => PendingBeneficiaryCubit(PendingBeneficiaryService())),
+        BlocProvider(create: (context) => BeneficiaryCubit(BeneficiaryService())),
+        BlocProvider(create: (context) => DocumentCubit(DocumentService())),
+        BlocProvider( create: (context) => CombinedRequestCubit(CombinedRequestService())),
+        BlocProvider(
+          create: (context) {
+            return FeaturedStaffCubit(
+              getIt.get<StaffRepoImpl>(),
+            )..fetchFeaturedStaff();
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return GetAllTypeCubit(
+              getIt.get<TypeRepoImpl>(),
+            )..fetchAllTypes();
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return CreateTypeCubit(
+              getIt.get<TypeRepoImpl>(),
+            );
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return CreateCategoryCubit(
+              getIt.get<CategoryRepoImpl>(),
+            );
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return UpdateCategoryCubit(
+              getIt.get<CategoryRepoImpl>(),
+            );
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return RequestItemsCubit(
+              getIt.get<RequestRepoImpl>(),
+            )..fetchRequestItems();
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return RequestCategoryCubit(
+              getIt.get<RequestRepoImpl>(),
+            )..fetchRequestCategories();
+          },
+        ),
+        BlocProvider(
+          create: (context) => ConsumeItemCubit(
+            getIt.get<ItemRepoImpl>(),
+          ),
+        ),
+        BlocProvider<LocaleCubit>(create: (_) => LocaleCubit()),
+      ],
+      child: FutureBuilder<bool>(
+        future: SharedPreferencesHelper.isLoggedIn(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData && snapshot.data == true) {
+            return FutureBuilder<String?>(
+              future: SharedPreferencesHelper.getUserRole(),
+              builder: (context, roleSnapshot) {
+                if (roleSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (roleSnapshot.hasData && roleSnapshot.data != null) {
+                  final initialRoute = roleSnapshot.data == "secretary"
+                      ? '/secretary_home'
+                      : roleSnapshot.data == "warehouseguard"
+                      ? '/warehouseHome'
+                      : '/';
+                  return BlocBuilder<LocaleCubit, Locale>(
+                    buildWhen: (previousState, currentState) => previousState != currentState,
+                    builder: (context, locale) {
+                      return MaterialApp(
+                        debugShowCheckedModeBanner: false,
+                        theme: ThemeManager.appTheme,
+                        initialRoute: initialRoute,
+                        routes: AppRouter.routes,
+                        supportedLocales: AppLocalizationsSetup.supportedLocales,
+                        localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+                        localeResolutionCallback: AppLocalizationsSetup.localeResolutionCallback,
+                        locale: locale,
+                      );
+                    },
+                  );
+                } else {
+                  return const LoginScreen();
+                }
+              },
+            );
+          } else {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: ThemeManager.appTheme,
+              initialRoute: LoginScreen.id,
+              routes: AppRouter.routes,
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+/*class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
@@ -117,6 +247,12 @@ class MyApp extends StatelessWidget {
             )..fetchRequestCategories();
           },
         ),
+        BlocProvider(
+          create: (context) => ConsumeItemCubit(
+            getIt.get<ItemRepoImpl>(),
+          ),
+        ),
+        BlocProvider<LocaleCubit>(create: (_) => LocaleCubit()),
       ],
       child: FutureBuilder<bool>(
         future: SharedPreferencesHelper.isLoggedIn(),
@@ -132,14 +268,23 @@ class MyApp extends StatelessWidget {
                 } else if (roleSnapshot.hasData && roleSnapshot.data != null) {
                   final initialRoute = roleSnapshot.data == "secretary"
                       ? '/secretary_home'
-                      : roleSnapshot.data == "warehourseguard"
+                      : roleSnapshot.data == "warehouseguard"
                       ? '/warehouseHome'
                       : '/';
-                  return MaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    theme: ThemeManager.appTheme,
-                    initialRoute: initialRoute,
-                    routes: AppRouter.routes,
+                  return BlocBuilder<LocaleCubit, LocaleState>(
+                    buildWhen: (previousState, currentState) => previousState != currentState,
+                    builder: (context, state) {
+                      return MaterialApp(
+                        debugShowCheckedModeBanner: false,
+                        theme: ThemeManager.appTheme,
+                        initialRoute: initialRoute,
+                        routes: AppRouter.routes,
+                        supportedLocales: AppLocalizationsSetup.supportedLocales,
+                        localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+                        localeResolutionCallback: AppLocalizationsSetup.localeResolutionCallback,
+                        locale: state.locale,
+                      );
+                    },
                   );
                 } else {
                   return const LoginScreen();
@@ -158,4 +303,5 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-}
+}*/
+

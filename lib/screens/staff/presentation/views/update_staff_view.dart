@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/localization/app_localizations.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../../widgets/general_widgets/common_scaffold.dart';
 import '../../data/models/show_all_staff_model.dart';
@@ -16,8 +17,9 @@ class UpdateStaffView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations local = AppLocalizations.of(context);
     return CommonScaffold(
-      title: "Update staff",
+      title: local.translate("update_staff"),
       scaffoldKey: _keyScaffold,
       body: BlocProvider(
         create: (context) {

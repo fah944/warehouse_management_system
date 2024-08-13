@@ -1,11 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../../core/localization/app_localizations.dart';
 import '../../../../../../../core/utils/app_manager.dart';
 import '../../../../../../warehouse_home/item_warehouse/presentation/manager/search_item_cubit/search_item_cubit.dart';
 import '../../../../../../warehouse_home/item_warehouse/presentation/manager/search_item_cubit/search_item_state.dart';
+import '../../../../../../warehouse_home/item_warehouse/presentation/views/item_details_view.dart';
 import 'search_list_view_item_manager.dart';
 
 class SearchListViewManager extends StatelessWidget {
@@ -21,32 +21,27 @@ class SearchListViewManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SearchItemCubit cubit = SearchItemCubit.get(context);
-    log("initial**********************************************************************************************${cubit.afterIncreasePaginate}");
     return BlocConsumer<SearchItemCubit, SearchItemState>(
         listener: (context, state) {
 
         },
         builder: (context, state) {
           if(state is SearchItemSuccess) {
-            log("initial111111**********************************************************************************************${cubit.afterIncreasePaginate}");
-            return state.allSearchItems.dataSearch.isEmpty ? const Center(child: Center(child: Text("There are no results to display."),),)
+            return state.allSearchItems.dataSearch!.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
                 : Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: state.allSearchItems.dataSearch.length,
+                  itemCount: state.allSearchItems.dataSearch!.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) => GestureDetector(
                     onTap: () {
-                      /*Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => StaffDetailsView(id: state.allStaff[index].id),),
-                              );*/
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ItemDetailsView(id: state.allSearchItems.dataSearch![index].id,),));
                     },
                     child: SearchListViewItemManager(
-                      allSearchItems: state.allSearchItems.dataSearch[index],
+                      allSearchItems: state.allSearchItems.dataSearch![index],
                       rank: 1 + index,
                     ),
                   ),
@@ -54,9 +49,8 @@ class SearchListViewManager extends StatelessWidget {
                     height: AppSize.s24,
                   ),
                 ),
-                state.allSearchItems.to < state.allSearchItems.total ? GestureDetector(
+                state.allSearchItems.to !< state.allSearchItems.total ? GestureDetector(
                   onTap: () {
-                    log("initial2222222**********************************************************************************************${cubit.afterIncreasePaginate}");
                     cubit.increasePaginate(paginate: cubit.afterIncreasePaginate);
                     //print("$name $typeId $categoryId $minQuantity $maxQuantity $paginate");
                     context.read<SearchItemCubit>().fetchSearchItem(
@@ -75,7 +69,7 @@ class SearchListViewManager extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          "See more",
+                          AppLocalizations.of(context).translate('see_more'),
                           style: TextStyle(
                             color: Colors.grey.shade600,
                           ),
@@ -96,7 +90,7 @@ class SearchListViewManager extends StatelessWidget {
           } else if(state is SearchItemLoading){
             return const Center(child: CircularProgressIndicator());
           } else {
-            return const Center(child: Center(child: Text("Please enter search query"),),);
+            return Center(child: Center(child: Text(AppLocalizations.of(context).translate('enter_search_query')),),);
           }
         }
     );

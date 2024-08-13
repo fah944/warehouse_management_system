@@ -6,9 +6,11 @@ import '../../../../../../../core/utils/color_manager.dart';
 import '../../../../../../../core/utils/service_locator.dart';
 import '../../../../../../../core/utils/style_manager.dart';
 import '../../../../../../../widgets/icon_btn_widget.dart';
+import '../../../../../../core/localization/app_localizations.dart';
 import '../../../../../warehouse_home/widget/custom_dialog_widget.dart';
 import '../../../data/models/get_all_category_model.dart';
 import '../../../data/repos/category_repo_impl.dart';
+import '../../manager/create_category_cubit/create_category_cubit.dart';
 import '../../manager/delete_category_cubit/delete_category_cubit.dart';
 import '../../manager/update_category_cubit/update_category_cubit.dart';
 
@@ -18,6 +20,8 @@ class CategoryGridViewItem extends StatelessWidget {
   final GetAllCategoryModel allCategoryModel;
   final Function()? onTap;
   final TextEditingController typeController = TextEditingController();
+  final TextEditingController categoryController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +50,29 @@ class CategoryGridViewItem extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Spacer(),
+                    IconBtnWidget(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialogFieldWidget(
+                              title: AppLocalizations.of(context).translate('add_new_category'),
+                              hintText: AppLocalizations.of(context).translate('enter_name'),
+                              controller: categoryController,
+                              onPressed: () {
+                                final createCategoryCubit =
+                                context.read<CreateCategoryCubit>();
+                                createCategoryCubit.fetchCreateCategory(
+                                    name: categoryController.text, parentId: allCategoryModel.id);
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
+                        );
+                      },
+                      icon: Icons.add,
+                      color: ColorManager.blue2,
+                    ),
                     BlocProvider(
                       create: (context) {
                         return UpdateCategoryCubit(
@@ -57,9 +84,9 @@ class CategoryGridViewItem extends StatelessWidget {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return CustomDialogWidget(
-                                title: 'Update Category',
-                                hintText: 'Enter name',
+                              return CustomDialogFieldWidget(
+                                title: AppLocalizations.of(context).translate('update_category'),
+                                hintText: AppLocalizations.of(context).translate('enter_name'),
                                 controller: typeController,
                                 onPressed: () {
                                   final createCategoryCubit = context.read<UpdateCategoryCubit>();

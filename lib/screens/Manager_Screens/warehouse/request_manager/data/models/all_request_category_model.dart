@@ -1,26 +1,26 @@
-class AllRequestItemModel {
-  AllRequestItemModel({
+class AllRequestCategoryModel {
+  AllRequestCategoryModel({
     required this.message,
-    required this.dataRequestItem,
+    required this.dataRequestCategory,
   });
   late final String message;
-  late final List<DataRequestItem> dataRequestItem;
+  late final List<DataRequestCategory>? dataRequestCategory;
 
-  AllRequestItemModel.fromJson(Map<String, dynamic> json){
+  AllRequestCategoryModel.fromJson(Map<String, dynamic> json){
     message = json['message'];
-    dataRequestItem = List.from(json['dataRequest']).map((e)=>DataRequestItem.fromJson(e)).toList();
+    dataRequestCategory = List.from(json['dataRequest']).map((e)=>DataRequestCategory.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['message'] = message;
-    data['dataRequest'] = dataRequestItem.map((e)=>e.toJson()).toList();
+    data['dataRequest'] = dataRequestCategory!.map((e)=>e.toJson()).toList();
     return data;
   }
 }
 
-class DataRequestItem {
-  DataRequestItem({
+class DataRequestCategory {
+  DataRequestCategory({
     required this.id,
     required this.requsetPending,
     required this.status,
@@ -35,7 +35,7 @@ class DataRequestItem {
   late final String createdAt;
   late final String updatedAt;
 
-  DataRequestItem.fromJson(Map<String, dynamic> json){
+  DataRequestCategory.fromJson(Map<String, dynamic> json){
     id = json['id'];
     requsetPending = json['requsetPending'];
     status = json['status'];

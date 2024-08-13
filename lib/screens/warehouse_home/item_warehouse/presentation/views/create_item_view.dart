@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/utils/service_locator.dart';
+import '../../../../../core/localization/app_localizations.dart';
 import '../../../../../widgets/general_widgets/common_scaffold.dart';
 import '../../data/repos/item_repo_impl.dart';
 import '../manager/create_item_cubit/create_item_cubit.dart';
@@ -17,7 +18,7 @@ class CreateItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: "WareHouse Manager",
+      title: AppLocalizations.of(context).translate('warehouse_home_title'),
       scaffoldKey: _keyScaffold,
       body: BlocProvider(
         create: (context) {
@@ -25,9 +26,12 @@ class CreateItemView extends StatelessWidget {
             getIt.get<ItemRepoImpl>(),
           );
         },
-        child: CreateItemViewBody(
-          typeId: typeId,
-          categoryId: categoryId,
+        child: Container(
+          color: Colors.white,
+          child: CreateItemViewBody(
+            typeId: typeId,
+            categoryId: categoryId,
+          ),
         )),
     );
   }

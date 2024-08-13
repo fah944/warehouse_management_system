@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../core/utils/color_manager.dart';
 import '../../../../../../../core/utils/style_manager.dart';
+import '../../../../../../core/localization/app_localizations.dart';
 import '../../../../../staff/presentation/views/widgets/custom_edit_text_field.dart';
 import '../../../data/models/all_items_model.dart';
 import '../../manager/update_item_cubit/update_item_cubit.dart';
@@ -27,14 +28,13 @@ class UpdateItemViewBody extends StatelessWidget {
     return BlocConsumer<UpdateItemCubit, UpdateItemState>(
       listener: (BuildContext context, state) {
         if (state is UpdateItemSuccess) {
-          //context.read<GetAllItemsCubit>().fetchAllItems();
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Item updated successfully")),
+            SnackBar(content: Text(AppLocalizations.of(context).translate('item_updated_successfully'))),
           );
         } else if (state is UpdateItemFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Item updated failed")),
+            SnackBar(content: Text(AppLocalizations.of(context).translate('item_updated_failed'))),
           );
         }
       },
@@ -54,9 +54,9 @@ class UpdateItemViewBody extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(height: MediaQuery.of(context).size.width * .02),
                   CustomEditTextField(
-                    hintText: "Name",
+                    hintText: AppLocalizations.of(context).translate('name'),
                     controller: nameController,
-                    validator: (value) => value!.isEmpty ? 'Required*' : null,
+                    validator: (value) => value!.isEmpty ? AppLocalizations.of(context).translate('validate_required') : null,
                     textCapitalization: TextCapitalization.words,
                     enabled: true,
                     obscureText: false,
@@ -64,8 +64,8 @@ class UpdateItemViewBody extends StatelessWidget {
                   SizedBox(height: MediaQuery.of(context).size.width * .02),
                   CustomEditTextField(
                     controller: quantityController,
-                    hintText: 'Quantity',
-                    validator: (value) => value!.isEmpty ? 'Required*' : null,
+                    hintText: AppLocalizations.of(context).translate('quantity'),
+                    validator: (value) => value!.isEmpty ? AppLocalizations.of(context).translate('validate_required') : null,
                     textCapitalization: TextCapitalization.words,
                     enabled: true,
                     obscureText: false,
@@ -73,16 +73,16 @@ class UpdateItemViewBody extends StatelessWidget {
                   SizedBox(height: MediaQuery.of(context).size.width * .02),
                   CustomEditTextField(
                     controller: descriptionController,
-                    hintText: 'Description',
-                    validator: (value) => value!.isEmpty ? 'Required*' : null,
+                    hintText: AppLocalizations.of(context).translate('description'),
+                    validator: (value) => value!.isEmpty ? AppLocalizations.of(context).translate('validate_required') : null,
                     enabled: true,
                     obscureText: false,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.width * .02),
                   CustomEditTextField(
                     controller: expiredDateController,
-                    hintText: 'Expired date',
-                    validator: (value) => value!.isEmpty ? 'Required*' : null,
+                    hintText: AppLocalizations.of(context).translate('expired_date'),
+                    validator: null,
                     textCapitalization: TextCapitalization.words,
                     enabled: true,
                     obscureText: false,
@@ -99,7 +99,7 @@ class UpdateItemViewBody extends StatelessWidget {
                           onPressed: state is UpdateItemLoading ? () {} : (){
                             Navigator.pop(context);
                           },
-                          child: Text('Cancel', style: StyleManager.h4Regular(color: ColorManager.bc0)),
+                          child: Text(AppLocalizations.of(context).translate('cancel'), style: StyleManager.h4Regular(color: ColorManager.bc0)),
                         ),
                         const Spacer(),
                         ElevatedButton(

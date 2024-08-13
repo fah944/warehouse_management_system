@@ -21,17 +21,7 @@ class AllCategoryViewBodyManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<GetAllCategoryCubit, GetAllCategoryState>(
-      listener: (context, state) {
-        /*if (state is GetAllCategorySuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Category created successfully")),
-          );
-        } else if (state is GetAllCategoryFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Category created failed")),
-          );
-        }*/
-      },
+      listener: (context, state) {  },
       builder: (context, state) {
         if (state is GetAllCategorySuccess) {
           return Padding(
