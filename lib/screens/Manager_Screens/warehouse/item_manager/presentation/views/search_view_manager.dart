@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../core/localization/app_localizations.dart';
 import '../../../../../../core/utils/service_locator.dart';
 import '../../../../../../widgets/general_widgets/common_scaffold.dart';
 import '../../../../../warehouse_home/item_warehouse/data/repos/item_repo_impl.dart';
@@ -17,7 +18,7 @@ class SearchViewManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: "Search",
+      title: AppLocalizations.of(context).translate('search_title'),
       scaffoldKey: _keyScaffold,
       body: BlocProvider(
         create: (context) {

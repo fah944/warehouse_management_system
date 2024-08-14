@@ -5,6 +5,7 @@ import 'package:project2/screens/staff/presentation/manger/featured_staff_cubit/
 import 'package:project2/screens/staff/presentation/manger/featured_staff_cubit/featured_staff_state.dart';
 import 'package:project2/screens/staff/presentation/views/staff_details_view.dart';
 
+import '../../../../../core/localization/app_localizations.dart';
 import '../../../../../core/utils/app_manager.dart';
 import '../../manger/delete_staff_cubit/delete_staff_cubit.dart';
 import 'staffs_list_view_item.dart';
@@ -14,6 +15,7 @@ class StaffsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations local = AppLocalizations.of(context);
     return BlocConsumer<FeaturedStaffCubit, FeaturedStaffState>(
       listener: (context, state) {
 
@@ -23,18 +25,19 @@ class StaffsListView extends StatelessWidget {
           listener: (contextInner, stateInner) {
             if (stateInner is DeleteStaffFailure) {
               ScaffoldMessenger.of(contextInner).showSnackBar(
-                const SnackBar(content: Text("Staff deleted failed")),
+                SnackBar(content: Text(local.translate("staff_deleted_failed"))),
               );
             } else if (stateInner is DeleteStaffSuccess) {
               contextInner.read<FeaturedStaffCubit>().fetchFeaturedStaff();
               ScaffoldMessenger.of(contextInner).showSnackBar(
-                const SnackBar(content: Text('Staff deleted successfully')),
+                SnackBar(content: Text(local.translate("staff_deleted_successfully"))),
               );
             }
           },
           builder: (contextInner, stateInner) {
             if (state is FeaturedStaffSuccess) {
-              return ListView.separated(
+              return state.allStaff.isEmpty ? Center(child: Center(child: Text(local.translate("empty_list_message")),),)
+                  : ListView.separated(
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: state.allStaff.length,
                 shrinkWrap: true,

@@ -1,13 +1,15 @@
- import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../core/localization/app_localizations.dart';
 import '../../../../../../core/utils/app_manager.dart';
+import '../../manager/consume_item_cubit/consume_item_cubit.dart';
+import '../../manager/consume_item_cubit/consume_item_state.dart';
 import '../../manager/delete_item_cubit/delete_item_cubit.dart';
 import '../../manager/delete_item_cubit/delete_item_state.dart';
 import '../../manager/search_item_cubit/search_item_cubit.dart';
 import '../../manager/search_item_cubit/search_item_state.dart';
+import '../item_details_view.dart';
 import 'search_list_view_item.dart';
 
 class SearchListView extends StatelessWidget {
@@ -23,7 +25,6 @@ class SearchListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SearchItemCubit cubit = SearchItemCubit.get(context);
-    log("initial**********************************************************************************************${cubit.afterIncreasePaginate}");
     return BlocConsumer<SearchItemCubit, SearchItemState>(
         listener: (context, state) {
 
@@ -43,35 +44,62 @@ class SearchListView extends StatelessWidget {
                 );
                 //Navigator.pop(contextInner);
                 ScaffoldMessenger.of(contextInner).showSnackBar(
-                  const SnackBar(content: Text("Item deleted successfully")),
+                  SnackBar(content: Text(AppLocalizations.of(context).translate('item_deleted_successfully'))),
                 );
               } else if (stateInner is DeleteItemFailure) {
                 ScaffoldMessenger.of(contextInner).showSnackBar(
-                  const SnackBar(content: Text("Item deleted failed")),
+                  SnackBar(content: Text(AppLocalizations.of(context).translate('item_deleted_failed'))),
                 );
               }
             },
             builder: (contextInner, stateInner) {
-              if(state is SearchItemSuccess) {
-                log("initial111111**********************************************************************************************${cubit.afterIncreasePaginate}");
-                return state.allSearchItems.dataSearch.isEmpty ? const Center(child: Center(child: Text("There are no results to display."),),)
-                    : Column(
+              return BlocConsumer<ConsumeItemCubit, ConsumeItemState>(
+                listener: (contextConsume, stateConsume) {
+                  if (stateConsume is ConsumeItemSuccess) {
+                    contextConsume.read<SearchItemCubit>().fetchSearchItem(
+                      name: name,
+                      typeId: typeId,
+                      categoryId: categoryId,
+                      minQuantity: minQuantity,
+                      maxQuantity: maxQuantity,
+                      status: 1,
+                      paginate: paginate
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(AppLocalizations.of(context).translate('item_decrease_successfully'))),
+                    );
+                  } else if (stateConsume is ConsumeItemFailure) {
+                    contextConsume.read<SearchItemCubit>().fetchSearchItem(
+                      name: name,
+                      typeId: typeId,
+                      categoryId: categoryId,
+                      minQuantity: minQuantity,
+                      maxQuantity: maxQuantity,
+                      status: 1,
+                      paginate: paginate
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(AppLocalizations.of(context).translate('item_decrease_failed'))),
+                    );
+                  }
+                },
+                builder: (contextConsume, stateConsume) {
+                  if(state is SearchItemSuccess) {
+                    return state.allSearchItems.dataSearch!.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
+                        : Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ListView.separated(
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: state.allSearchItems.dataSearch.length,
+                          itemCount: state.allSearchItems.dataSearch!.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () {
-                              /*Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => StaffDetailsView(id: state.allStaff[index].id),),
-                              );*/
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => ItemDetailsView(id: state.allSearchItems.dataSearch![index].id,),));
                             },
                             child: SearchListViewItem(
-                              allSearchItems: state.allSearchItems.dataSearch[index],
+                              allSearchItems: state.allSearchItems.dataSearch![index],
                               rank: 1 + index,
                             ),
                           ),
@@ -79,11 +107,9 @@ class SearchListView extends StatelessWidget {
                             height: AppSize.s24,
                           ),
                         ),
-                        state.allSearchItems.to < state.allSearchItems.total ? GestureDetector(
+                        state.allSearchItems.to !< state.allSearchItems.total ? GestureDetector(
                           onTap: () {
-                            log("initial2222222**********************************************************************************************${cubit.afterIncreasePaginate}");
                             cubit.increasePaginate(paginate: cubit.afterIncreasePaginate);
-                            //print("$name $typeId $categoryId $minQuantity $maxQuantity $paginate");
                             contextInner.read<SearchItemCubit>().fetchSearchItem(
                               name: name,
                               typeId: typeId,
@@ -100,7 +126,7 @@ class SearchListView extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  "See more",
+                                  AppLocalizations.of(context).translate('see_more'),
                                   style: TextStyle(
                                     color: Colors.grey.shade600,
                                   ),
@@ -116,13 +142,15 @@ class SearchListView extends StatelessWidget {
                         ) : const SizedBox(height: 0.0, width: 0.0,),
                       ],
                     );
-              } else if(state is SearchItemFailure) {
-                return Text(state.errorMessage);
-              } else if(state is SearchItemLoading){
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                return const Center(child: Center(child: Text("Please enter search query"),),);
-              }
+                  } else if(state is SearchItemFailure) {
+                    return Text(state.errorMessage);
+                  } else if(state is SearchItemLoading){
+                    return const Center(child: CircularProgressIndicator());
+                  } else {
+                    return Center(child: Center(child: Text(AppLocalizations.of(context).translate('enter_search_query')),),);
+                  }
+                },
+              );
             },
           );
         }

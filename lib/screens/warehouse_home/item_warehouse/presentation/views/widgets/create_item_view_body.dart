@@ -1,12 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../../../core/utils/color_manager.dart';
 import '../../../../../../../core/utils/style_manager.dart';
+import '../../../../../../core/localization/app_localizations.dart';
 import '../../../../../staff/presentation/views/widgets/custom_edit_text_field.dart';
 import '../../manager/create_item_cubit/create_item_cubit.dart';
 import '../../manager/create_item_cubit/create_item_state.dart';
-import '../../manager/get_all_items_cubit/get_all_items_cubit.dart';
 
 class CreateItemViewBody extends StatelessWidget {
   CreateItemViewBody({Key? key, required this.typeId, required this.categoryId}) : super(key: key);
@@ -14,8 +17,8 @@ class CreateItemViewBody extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController expiredDateController = TextEditingController();
-  final TextEditingController minimumQuantityController = TextEditingController();
+  final TextEditingController? expiredDateController = TextEditingController();
+  final TextEditingController? minimumQuantityController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final int typeId;
   final int categoryId;
@@ -26,16 +29,13 @@ class CreateItemViewBody extends StatelessWidget {
     return BlocConsumer<CreateItemCubit, CreateItemState>(
       listener: (BuildContext context, state) {
         if (state is CreateItemSuccess) {
-          context.read<GetAllItemsCubit>().fetchAllItems(
-            paginate: paginate
-          );
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Item created successfully")),
+            SnackBar(content: Text(AppLocalizations.of(context).translate('item_submitted_successfully'))),
           );
         } else if (state is CreateItemFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Item created failed")),
+            SnackBar(content: Text(AppLocalizations.of(context).translate('item_created_failed'))),
           );
         }
       },
@@ -55,9 +55,9 @@ class CreateItemViewBody extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(height: MediaQuery.of(context).size.width * .02),
                   CustomEditTextField(
-                    hintText: "Name",
+                    hintText: AppLocalizations.of(context).translate('name'),
                     controller: nameController,
-                    validator: (value) => value!.isEmpty ? 'Required*' : null,
+                    validator: (value) => value!.isEmpty ? AppLocalizations.of(context).translate('validate_required') : null,
                     textCapitalization: TextCapitalization.words,
                     enabled: true,
                     obscureText: false,
@@ -65,8 +65,8 @@ class CreateItemViewBody extends StatelessWidget {
                   SizedBox(height: MediaQuery.of(context).size.width * .02),
                   CustomEditTextField(
                     controller: quantityController,
-                    hintText: 'Quantity',
-                    validator: (value) => value!.isEmpty ? 'Required*' : null,
+                    hintText: AppLocalizations.of(context).translate('quantity'),
+                    validator: (value) => value!.isEmpty ? AppLocalizations.of(context).translate('validate_required') : null,
                     textCapitalization: TextCapitalization.words,
                     enabled: true,
                     obscureText: false,
@@ -74,25 +74,37 @@ class CreateItemViewBody extends StatelessWidget {
                   SizedBox(height: MediaQuery.of(context).size.width * .02),
                   CustomEditTextField(
                     controller: descriptionController,
-                    hintText: 'Description',
-                    validator: (value) => value!.isEmpty ? 'Required*' : null,
+                    hintText: AppLocalizations.of(context).translate('description'),
+                    validator: (value) => value!.isEmpty ? AppLocalizations.of(context).translate('validate_required') : null,
                     enabled: true,
                     obscureText: false,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.width * .02),
                   CustomEditTextField(
                     controller: expiredDateController,
-                    hintText: 'Expired date',
-                    validator: (value) => value!.isEmpty ? 'Required*' : null,
+                    hintText: AppLocalizations.of(context).translate('expired_date'),
+                    validator: null,
                     textCapitalization: TextCapitalization.words,
                     enabled: true,
                     obscureText: false,
+                    onTap: () {
+                      showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime.parse('2024-02-08'),
+                      ).then((value) {
+                        //Tuesday Oct 03
+                        expiredDateController!.text = '${DateFormat.EEEE().format(value!)} ${DateFormat.MMMd().format(value)}';
+                      });
+                      log(expiredDateController!.text);
+                    },
                   ),
                   SizedBox(height: MediaQuery.of(context).size.width * .02),
                   CustomEditTextField(
                     controller: minimumQuantityController,
-                    hintText: 'Minimum quantity',
-                    validator: (value) => value!.isEmpty ? 'Required*' : null,
+                    hintText: AppLocalizations.of(context).translate('minimum_quantity'),
+                    validator: null,
                     textCapitalization: TextCapitalization.words,
                     enabled: true,
                     obscureText: false,
@@ -109,7 +121,7 @@ class CreateItemViewBody extends StatelessWidget {
                           onPressed: state is CreateItemLoading ? () {} : (){
                             Navigator.pop(context);
                         },
-                          child: Text('Cancel', style: StyleManager.h4Regular(color: ColorManager.bc0)),
+                          child: Text(AppLocalizations.of(context).translate('cancel'), style: StyleManager.h4Regular(color: ColorManager.bc0)),
                         ),
                         const Spacer(),
                         ElevatedButton(
@@ -123,11 +135,11 @@ class CreateItemViewBody extends StatelessWidget {
                               categoryId: categoryId,
                               quantity: int.parse(quantityController.text),
                               description: descriptionController.text,
-                              expiredDate: expiredDateController.text,
-                              minimumQuantity: int.parse(minimumQuantityController.text),
+                              expiredDate: expiredDateController?.text,
+                              minimumQuantity: minimumQuantityController!.text.isNotEmpty ? int.parse(minimumQuantityController!.text) : null,
                             );
                           },
-                          child: state is CreateItemLoading ? const Center(child: CircularProgressIndicator()) : Text('Create', style: StyleManager.h4Regular(color: ColorManager.bc0)),
+                          child: state is CreateItemLoading ? const Center(child: CircularProgressIndicator()) : Text(AppLocalizations.of(context).translate('create'), style: StyleManager.h4Regular(color: ColorManager.bc0)),
                         ),
                       ],
                     ),

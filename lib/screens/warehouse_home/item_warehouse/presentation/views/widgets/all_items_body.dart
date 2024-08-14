@@ -5,8 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../../../../core/utils/app_manager.dart';
 import '../../../../../../../core/utils/color_manager.dart';
 import '../../../../../../../core/utils/style_manager.dart';
+import '../../../../../../core/localization/app_localizations.dart';
 import '../../../../../warehouse_home/widget/circular_icon_widget.dart';
-import '../../../../../warehouse_home/widget/elevated_btn_widget.dart';
 import '../../manager/export_to_excel_cubit/export_to_excel_cubit.dart';
 import '../../manager/export_to_excel_cubit/export_to_excel_state.dart';
 import '../../manager/get_all_items_cubit/get_all_items_cubit.dart';
@@ -34,22 +34,22 @@ class AllItemsBody extends StatelessWidget {
         }
         if (stateImport is ImportFromExcelFailure) {
           ScaffoldMessenger.of(contextImport).showSnackBar(
-            const SnackBar(content: Text("Import items failed")),
+            SnackBar(content: Text(AppLocalizations.of(context).translate('import_items_failed'))),
           );
         } else if (stateImport is ImportFromExcelSuccess) {
           contextImport.read<GetAllItemsCubit>().fetchAllItems(
               paginate: 50,
           );
           ScaffoldMessenger.of(contextImport).showSnackBar(
-            const SnackBar(content: Text('items imported successfully')),
+            SnackBar(content: Text(AppLocalizations.of(context).translate('items_imported_successfully'))),
           );
         } else if (stateImport is SelectedFileFailure) {
           ScaffoldMessenger.of(contextImport).showSnackBar(
-            const SnackBar(content: Text('File picked failed, try again!')),
+            SnackBar(content: Text(AppLocalizations.of(context).translate('file_picked_failed'))),
           );
         } else if (stateImport is SelectedFileEmpty) {
           ScaffoldMessenger.of(contextImport).showSnackBar(
-            const SnackBar(content: Text('Please pick a file first')),
+            SnackBar(content: Text(AppLocalizations.of(context).translate('pick_file_first'))),
           );
         }
       },
@@ -58,11 +58,11 @@ class AllItemsBody extends StatelessWidget {
           listener: (context, state) {
             if (state is ExportToExcelFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Export items failed")),
+                SnackBar(content: Text(AppLocalizations.of(context).translate('export_items_failed'))),
               );
             } else if (state is ExcelFileSaveSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('items exported successfully')),
+                SnackBar(content: Text(AppLocalizations.of(context).translate('items_exported_successfully'))),
               );
             }
           },
@@ -88,7 +88,7 @@ class AllItemsBody extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Tooltip(
-                                message: "Import items",
+                                message: AppLocalizations.of(context).translate('import_items'),
                                 child: GestureDetector(
                                   onTap: () {
                                     ImportFromExcelCubit.get(context).pickImage();
@@ -103,7 +103,7 @@ class AllItemsBody extends StatelessWidget {
                                 ),
                               ),
                               Tooltip(
-                                message: "Export items",
+                                message: AppLocalizations.of(context).translate('export_items'),
                                 child: GestureDetector(
                                   onTap: () {
                                     BlocProvider.of<ExportToExcelCubit>(context).fetchExportToExcel(fields: ["id","name","quantity"]);
@@ -117,29 +117,53 @@ class AllItemsBody extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) => SearchView(
-                                        typeId: typeId,
-                                        categoryId: categoryId,
+                              Tooltip(
+                                message: AppLocalizations.of(context).translate('search'),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (_, __, ___) => SearchView(
+                                          typeId: typeId,
+                                          categoryId: categoryId,
+                                        ),
+                                        transitionDuration: Duration.zero,
+                                        transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
                                       ),
-                                      transitionDuration: Duration.zero,
-                                      transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
-                                    ),
-                                  );
-                                },
-                                child: circleIconWidget(
-                                    icon: Icons.search_sharp,
-                                    backgroundColor: Colors.transparent,
-                                    color: ColorManager.blue,
-                                    radius: 30.0,
-                                    size: 25.0
+                                    );
+                                  },
+                                  child: circleIconWidget(
+                                      icon: Icons.search_sharp,
+                                      backgroundColor: Colors.transparent,
+                                      color: ColorManager.blue,
+                                      size: AppSize.s30,
+                                      radius: AppSize.s20,
+                                  ),
                                 ),
                               ),
-                              elevatedbtn(
+                              Tooltip(
+                                message: AppLocalizations.of(context).translate('add_item'),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => CreateItemView(
+                                        typeId: typeId,
+                                        categoryId: categoryId,
+                                      ),),
+                                    );
+                                  },
+                                  child: circleIconWidget(
+                                    icon: Icons.add_circle_outline,
+                                    backgroundColor: Colors.transparent,
+                                    color: ColorManager.blue,
+                                    size: AppSize.s30,
+                                    radius: AppSize.s20,
+                                  ),
+                                ),
+                              ),
+                              /*elevatedbtn(
                                 icon: circleIconWidget(
                                   icon: Icons.add,
                                   backgroundColor: ColorManager.orange,
@@ -156,7 +180,7 @@ class AllItemsBody extends StatelessWidget {
                                     ),),
                                   );
                                 },
-                              ),
+                              ),*/
                             ],
                           ),
                         ),
@@ -180,19 +204,19 @@ class AllItemsBody extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                "Rank",
+                                AppLocalizations.of(context).translate('rank'),
                                 style: StyleManager.body1Regular(),
                               ),
                               const SizedBox(width: AppSize.s50,),
                               Center(
                                 child: Text(
-                                  "Name",
+                                  AppLocalizations.of(context).translate('name'),
                                   style: StyleManager.body1Regular(color: ColorManager.blackColor),
                                 ),
                               ),
                               const Spacer(),
                               Text(
-                                "Quantity",
+                                AppLocalizations.of(context).translate('quantity'),
                                 style: StyleManager.body1Regular(color: ColorManager.blackColor),
                               ),
                               const SizedBox(height: AppSize.s50,),

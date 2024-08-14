@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../core/localization/app_localizations.dart';
 import '../../../../category_warehouse/presentation/views/all_category_view.dart';
 import '../../manager/delete_type_cubit/delete_type_cubit.dart';
 import '../../manager/delete_type_cubit/delete_type_state.dart';
@@ -21,17 +22,18 @@ class TypeGridView extends StatelessWidget {
             listener: (contextInner, stateInner) {
               if (stateInner is DeleteTypeFailure) {
                 ScaffoldMessenger.of(contextInner).showSnackBar(
-                  const SnackBar(content: Text("Type deleted failed")),
+                  SnackBar(content: Text(AppLocalizations.of(context).translate('type_deleted_failed'))),
                 );
               } else if (stateInner is DeleteTypeSuccess) {
                 contextInner.read<GetAllTypeCubit>().fetchAllTypes();
                 ScaffoldMessenger.of(contextInner).showSnackBar(
-                  const SnackBar(content: Text('Type deleted successfully')),
+                  SnackBar(content: Text(AppLocalizations.of(context).translate('type_deleted_successfully'))),
                 );
               }
             },
             builder: (contextInner, stateInner) {
-              return GridView.builder(
+              return state.allTypes.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
+                  : GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: state.allTypes.length,

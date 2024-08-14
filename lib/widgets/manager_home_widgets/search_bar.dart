@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../Bloc/profile/user_profile_cubit.dart';
+import '../../core/localization/local_cubit/local_cubit.dart';
+import '../../core/utils/app_routes.dart';
 import '../../Bloc/notification_cubit.dart';
 import '../../Bloc/secertary/course/course_cubit.dart';
 import '../../Bloc/secertary/student/beneficiary_cubit.dart';
@@ -101,6 +104,24 @@ class Search_Bar extends StatelessWidget {
                 icon: Icon(Icons.notifications, color: Colors.black),
                 onPressed: () {},
               ),
+              IconButton(
+                icon: Icon(Icons.translate),
+                onPressed: () {
+                  final localeCubit = BlocProvider.of<LocaleCubit>(context);
+                  if (localeCubit.state.languageCode == 'en') {
+                    localeCubit.toArabic();
+                  } else {
+                    localeCubit.toEnglish();
+                  }
+                },
+              ),
+            /*  IconButton(
+                icon: Icon(Icons.person, color: Colors.black),
+                onPressed: () {
+                  context.read<UserProfileCubit>().getUserProfile();
+                  Navigator.pushNamed(context, AppRouter.profile);
+                },
+              ),*/
               const SizedBox(width: 20),
               Container(
                 width: 140,

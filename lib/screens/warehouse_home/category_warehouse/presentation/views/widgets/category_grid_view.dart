@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../core/localization/app_localizations.dart';
 import '../../../../item_warehouse/presentation/views/all_items_view.dart';
 import '../../manager/delete_category_cubit/delete_category_cubit.dart';
 import '../../manager/delete_category_cubit/delete_category_state.dart';
@@ -23,11 +24,11 @@ class CategoryGridView extends StatelessWidget {
           listener: (contextUpdate, stateUpdate) {
             if (stateUpdate is UpdateCategorySuccess) {
               ScaffoldMessenger.of(contextUpdate).showSnackBar(
-                const SnackBar(content: Text("Category Updated successfully")),
+                SnackBar(content: Text(AppLocalizations.of(context).translate('category_updated_successfully'))),
               );
             } else if (stateUpdate is UpdateCategoryFailure) {
               ScaffoldMessenger.of(contextUpdate).showSnackBar(
-                const SnackBar(content: Text("Category Updated failed")),
+                SnackBar(content: Text(AppLocalizations.of(context).translate('category_updated_failed'))),
               );
             }
           },
@@ -38,16 +39,17 @@ class CategoryGridView extends StatelessWidget {
                   if (stateDelete is DeleteCategorySuccess) {
                     contextDelete.read<GetAllCategoryCubit>().fetchAllCategories();
                     ScaffoldMessenger.of(contextDelete).showSnackBar(
-                      const SnackBar(content: Text("Category deleted successfully")),
+                      SnackBar(content: Text(AppLocalizations.of(context).translate('category_deleted_successfully'))),
                     );
                   } else if (stateDelete is DeleteCategoryFailure) {
                     ScaffoldMessenger.of(contextDelete).showSnackBar(
-                      const SnackBar(content: Text("Category deleted failed")),
+                      SnackBar(content: Text(AppLocalizations.of(context).translate('category_deleted_failed'))),
                     );
                   }
                 },
                 builder: (contextDelete, stateDelete) {
-                  return GridView.builder(
+                  return state.allCategories.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
+                      : GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: state.allCategories.length,

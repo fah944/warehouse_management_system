@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/utils/service_locator.dart';
+import '../../../../../core/localization/app_localizations.dart';
 import '../../../../../widgets/general_widgets/common_scaffold.dart';
 import '../../data/repos/item_repo_impl.dart';
+import '../manager/consume_item_cubit/consume_item_cubit.dart';
 import '../manager/delete_item_cubit/delete_item_cubit.dart';
 import '../manager/export_to_excel_cubit/export_to_excel_cubit.dart';
 import '../manager/get_all_items_cubit/get_all_items_cubit.dart';
@@ -21,7 +23,7 @@ class AllItemsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: "WareHouse Manager",
+      title: AppLocalizations.of(context).translate('warehouse_home_title'),
       scaffoldKey: _keyScaffold,
       body: MultiBlocProvider(
         providers: [
@@ -53,10 +55,14 @@ class AllItemsView extends StatelessWidget {
               getIt.get<ItemRepoImpl>(),
             ),
           ),
+
         ],
-        child: AllItemsBody(
-          typeId: typeId,
-          categoryId: categoryId,
+        child: Container(
+          color: Colors.white,
+          child: AllItemsBody(
+            typeId: typeId,
+            categoryId: categoryId,
+          ),
         ),
       ),
     );

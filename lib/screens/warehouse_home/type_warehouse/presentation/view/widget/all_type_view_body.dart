@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../app.dart';
+import '../../../../../../core/localization/app_localizations.dart';
 import '../../../../../../core/utils/app_manager.dart';
 import '../../../../../../core/utils/color_manager.dart';
 import '../../../../../../core/utils/service_locator.dart';
@@ -27,12 +29,12 @@ class AllTypeViewBody extends StatelessWidget {
       listener: (context, state) {
         if (state is CreateTypeFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Type created failed")),
+            SnackBar(content: Text(AppLocalizations.of(context).translate('type_snack_bar_f'))),
           );
         } else if (state is CreateTypeSuccess) {
           context.read<GetAllTypeCubit>().fetchAllTypes();
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Type created successfully')),
+            SnackBar(content: Text(AppLocalizations.of(context).translate('type_snack_bar_s'))),
           );
         }
       },
@@ -64,15 +66,15 @@ class AllTypeViewBody extends StatelessWidget {
                           backgroundColor: ColorManager.orange,
                           color: ColorManager.bc0,
                         ),
-                        text: 'Add New Type',
+                        text: AppLocalizations.of(context).translate('add_new_type'),
                         style: StyleManager.labelMedium(color: ColorManager.bc4),
                         onPressed: () {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return CustomDialogWidget(
-                                title: 'Add new type',
-                                hintText: 'Enter name',
+                              return CustomDialogFieldWidget(
+                                title: AppLocalizations.of(context).translate('add_new_type'),
+                                hintText: AppLocalizations.of(context).translate('enter_name'),
                                 controller: typeController,
                                 onPressed: () {
                                   final createTypeCubit = context.read<CreateTypeCubit>();
@@ -115,13 +117,6 @@ class AllTypeViewBody extends StatelessWidget {
                 ),
                 const SizedBox(
                   height: AppSize.s20,
-                ),
-                Text(
-                  'Types',
-                  style: StyleManager.h3Bold(color: ColorManager.blackColor),
-                ),
-                const SizedBox(
-                  height: AppSize.s24,
                 ),
                 BlocProvider(
                   create: (context) {

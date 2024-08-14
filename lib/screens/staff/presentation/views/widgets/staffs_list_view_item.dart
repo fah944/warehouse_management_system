@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project2/core/utils/assets_manager.dart';
 import 'package:project2/screens/staff/data/models/show_all_staff_model.dart';
 import 'package:project2/screens/staff/presentation/manger/delete_staff_cubit/delete_staff_cubit.dart';
 import 'package:project2/screens/staff/presentation/views/update_staff_view.dart';
@@ -45,7 +44,7 @@ class StaffsListViewItem extends StatelessWidget {
                 style: StyleManager.body1Regular(),
               ),
               const SizedBox(width: AppSize.s50,),
-              const CustomImageNetwork(image: AssetsManager.testImage,),
+              allStaff.imagePath != null ? CustomImageNetwork(image: allStaff.imagePath?.replaceRange(0, 11, ''),) : const CustomImageAsset(),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.007,
               ),

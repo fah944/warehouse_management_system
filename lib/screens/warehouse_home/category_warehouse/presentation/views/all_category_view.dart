@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/utils/service_locator.dart';
+import '../../../../../core/localization/app_localizations.dart';
 import '../../../../../widgets/general_widgets/common_scaffold.dart';
 import '../../data/repos/category_repo_impl.dart';
 import '../manager/get_all_category_cubit/get_all_category_cubit.dart';
@@ -17,7 +18,7 @@ class AllCategoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: "WareHouse Manager",
+      title: AppLocalizations.of(context).translate('warehouse_home_title'),
       scaffoldKey: _keyScaffold,
       body: MultiBlocProvider(
         providers: [
@@ -29,7 +30,13 @@ class AllCategoryView extends StatelessWidget {
             },
           ),
         ],
-        child: AllCategoryViewBody(typeId: typeId!,)),
+        child: Container(
+            color: Colors.white,
+            child: AllCategoryViewBody(
+              typeId: typeId!,
+            ),
+        ),
+      ),
     );
   }
 }

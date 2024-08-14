@@ -43,47 +43,6 @@ class StaffRepoImpl implements StaffRepo {
   }
 
   @override
-  Future<Either<Failure, CreateStaffModel>> fetchCreateStaff({
-    required String name,
-    required String email,
-    required String number,
-    required String password,
-    required String role,
-    required Uint8List imageBytes,
-  }) async {
-    FormData formData = FormData.fromMap({
-      "name": name,
-      "email": email,
-      "number": number,
-      "password": password,
-      "image": MultipartFile.fromBytes(
-        imageBytes,
-        filename: 'upload.jpg',
-      ),
-      "role": role,
-    });
-
-    try{
-      dio.options.headers = {
-        'Authorization': 'Bearer ${Constants.token}',
-      };
-      var response =
-      await dio.post("http://127.0.0.1:8000/api/createstaff", data: formData);
-
-      if (response.statusCode != null && response.statusCode! >= 200 &&
-          response.statusCode! < 300) {
-        return right(CreateStaffModel.fromJson(response.data));
-      } else {
-        throw Exception(
-            'Registration failed with status: ${response.statusCode}');
-      }
-    } catch (e) {
-        //throw left(ServerFailure.fromDioError(e));
-      return left(ServerFailure(e.toString()));
-    }
-  }
-
-  @override
   Future<Either<Failure, DeleteStaffModel>> fetchDeleteStaff({
     required int id,
   })  async {
@@ -129,8 +88,7 @@ class StaffRepoImpl implements StaffRepo {
   }
 
   @override
-  Future<Either<Failure, UpdateStaffModel>> fetchUpdateStaff({
-    required int id,
+  Future<Either<Failure, CreateStaffModel>> fetchCreateStaff({
     required String name,
     required String email,
     required String number,
@@ -151,23 +109,70 @@ class StaffRepoImpl implements StaffRepo {
     });
 
     try{
-      dio.options.headers = {
+      var data = await (dioApiService.postWithImage(
+        endPoint: 'createstaff',
+        data: formData,
+        token: await Constants.token,
+      ));
+      log(data.toString());
+      CreateStaffModel createStaffModel;
+      createStaffModel = CreateStaffModel.fromJson(data);
+
+      return right(createStaffModel);
+      /*dio.options.headers = {
         'Authorization': 'Bearer ${Constants.token}',
       };
       var response =
-      await dio.post("http://127.0.0.1:8000/api/updatestaff/$id", data: formData);
+      await dio.post("http://127.0.0.1:8000/api/createstaff", data: formData);
 
       if (response.statusCode != null && response.statusCode! >= 200 &&
           response.statusCode! < 300) {
-        return right(UpdateStaffModel.fromJson(response.data));
+        return right(CreateStaffModel.fromJson(response.data));
       } else {
         throw Exception(
-            'Update failed with status: ${response.statusCode}');
-      }
+            'Registration failed with status: ${response.statusCode}');
+      }*/
     } catch (e) {
       //throw left(ServerFailure.fromDioError(e));
       return left(ServerFailure(e.toString()));
     }
   }
 
+  @override
+  Future<Either<Failure, UpdateStaffModel>> fetchUpdateStaff({
+    required int id,
+    required String name,
+    required String email,
+    required String number,
+    required String password,
+    required String role,
+    required Uint8List imageBytes,
+  }) async {
+    FormData formData = FormData.fromMap({
+      "name": name,
+      "email": email,
+      "number": number,
+      "password": password,
+      "image": MultipartFile.fromBytes(
+        imageBytes,
+        filename: 'upload.jpg',
+      ),
+      "role": role,
+    });
+    try{
+      var data = await (dioApiService.postWithImage(
+        endPoint: 'updatestaff/3',
+        data: formData,
+        token: await Constants.token,
+      ));
+      log(data.toString());
+      UpdateStaffModel updateStaffModel;
+      updateStaffModel = UpdateStaffModel.fromJson(data);
+
+      return right(updateStaffModel);
+    } catch (e) {
+      //throw left(ServerFailure.fromDioError(e));
+      return left(ServerFailure(e.toString()));
+    }
+  }
 }

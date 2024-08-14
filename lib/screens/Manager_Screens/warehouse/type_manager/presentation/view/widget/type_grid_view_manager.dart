@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../../core/localization/app_localizations.dart';
 import '../../../../../../warehouse_home/type_warehouse/presentation/manager/get_all_type_cubit/get_all_type_cubit.dart';
 import '../../../../../../warehouse_home/type_warehouse/presentation/manager/get_all_type_cubit/get_all_type_state.dart';
 import '../../../../category_manager/presentation/views/all_category_view_manager.dart';
@@ -15,7 +16,8 @@ class TypeGridViewManager extends StatelessWidget {
       listener: (context, state) {},
       builder: (BuildContext context, state) {
         if (state is GetAllTypeSuccess) {
-          return GridView.builder(
+          return state.allTypes.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
+              : GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: state.allTypes.length,

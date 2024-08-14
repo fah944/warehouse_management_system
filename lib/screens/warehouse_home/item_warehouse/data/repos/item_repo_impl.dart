@@ -10,7 +10,10 @@ import '../../../../../../core/errors/failures.dart';
 import '../../../../../../core/utils/dio_api_service.dart';
 import '../../../../../core/utils/shared_preferences_helper.dart';
 import '../models/all_items_model.dart';
+import '../models/consume_item_model.dart';
 import '../models/create_item_model.dart';
+import '../models/expired_items_model.dart';
+import '../models/expiring_soon_items_model.dart';
 import '../models/item_by_id_model.dart';
 import '../models/search_items_model.dart';
 import '../models/update_item_model.dart';
@@ -35,7 +38,7 @@ class ItemRepoImpl implements ItemRepo {
       AllItemsModel allItemsModel;
       allItemsModel = AllItemsModel.fromJson(data);
       List<DataView> allItems = [];
-      for (var item in allItemsModel.dataView) {
+      for (var item in allItemsModel.dataView!) {
         allItems.add(item);
       }
       return right(allItemsModel);
@@ -54,13 +57,13 @@ class ItemRepoImpl implements ItemRepo {
     required int categoryId,
     required int quantity,
     required String description,
-    required String expiredDate,
-    required int minimumQuantity
+    required String? expiredDate,
+    required int? minimumQuantity
   }) async {
     try{
       var data = await (dioApiService.post(
           endPoint: 'items',
-          data: {
+          data: minimumQuantity != null ? {
             "name": name,
             "type_id": typeId,
             "category_id": categoryId,
@@ -68,6 +71,14 @@ class ItemRepoImpl implements ItemRepo {
             "description": description,
             "expired_date": expiredDate,
             "minimum_quantity": minimumQuantity,
+          }
+          : {
+            "name": name,
+            "type_id": typeId,
+            "category_id": categoryId,
+            "quantity": quantity,
+            "description": description,
+            "expired_date": expiredDate,
           },
           token: await Constants.token
       ));
@@ -182,7 +193,7 @@ class ItemRepoImpl implements ItemRepo {
       SearchItemsModel searchItemsModel;
       searchItemsModel = SearchItemsModel.fromJson(data);
       List<DataSearch> searchItems = [];
-      for (var item in searchItemsModel.dataSearch) {
+      for (var item in searchItemsModel.dataSearch!) {
         searchItems.add(item);
       }
       return right(searchItemsModel);
@@ -269,6 +280,81 @@ class ItemRepoImpl implements ItemRepo {
       print("HELLO1");
       print(e);
       //throw left(ServerFailure.fromDioError(e));
+      return left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ConsumeItemModel>> fetchConsumeItem({
+    required int id,
+    required int quantityConsume,
+  }) async {
+    try{
+      var data = await (dioApiService.post(
+          endPoint: 'items/cunsumeItem/$id',
+          data: {
+            "quantityCunsume": quantityConsume,
+          },
+          token: await Constants.token
+      ));
+      log(data.toString());
+      ConsumeItemModel consumeItemModel;
+      consumeItemModel = ConsumeItemModel.fromJson(data);
+      return right(consumeItemModel);
+    } catch (e) {
+      if (e is DioError){
+        return left(ServerFailure.fromDioError(e),);
+      }
+      return left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ExpiringSoonItemsModel>> fetchExpiringSoonItems({
+    required int paginate,
+  }) async {
+    try {
+      var data = await (dioApiService.get(
+          endPoint: 'items/expiring-soon?paginate=$paginate',
+          token: await Constants.token
+      ));
+      log(data.toString());
+      ExpiringSoonItemsModel expiringSoonItemsModel;
+      expiringSoonItemsModel = ExpiringSoonItemsModel.fromJson(data);
+      List<DataExpiring> expiringSoonItems = [];
+      for (var item in expiringSoonItemsModel.dataExpiring!) {
+        expiringSoonItems.add(item);
+      }
+      return right(expiringSoonItemsModel);
+    } catch (e) {
+      if (e is DioError){
+        return left(ServerFailure.fromDioError(e),);
+      }
+      return left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ExpiredItemsModel>> fetchExpiredItems({
+    required int paginate,
+  }) async {
+    try {
+      var data = await (dioApiService.get(
+          endPoint: 'items/expired?paginate=$paginate',
+          token: await Constants.token
+      ));
+      log(data.toString());
+      ExpiredItemsModel expiredItemsModel;
+      expiredItemsModel = ExpiredItemsModel.fromJson(data);
+      List<DataExpired> expiredItems = [];
+      for (var item in expiredItemsModel.dataExpired!) {
+        expiredItems.add(item);
+      }
+      return right(expiredItemsModel);
+    } catch (e) {
+      if (e is DioError){
+        return left(ServerFailure.fromDioError(e),);
+      }
       return left(ServerFailure(e.toString()));
     }
   }

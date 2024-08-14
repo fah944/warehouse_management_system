@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../core/localization/app_localizations.dart';
 import '../../../../../../../core/utils/app_manager.dart';
 import '../../../../../../../core/utils/color_manager.dart';
 import '../../../../../../../core/utils/style_manager.dart';
@@ -79,19 +80,19 @@ class AllItemViewBodyManager extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "Rank",
+                        AppLocalizations.of(context).translate('rank'),
                         style: StyleManager.body1Regular(),
                       ),
                       const SizedBox(width: AppSize.s50,),
                       Center(
                         child: Text(
-                          "Name",
+                          AppLocalizations.of(context).translate('name'),
                           style: StyleManager.body1Regular(color: ColorManager.blackColor),
                         ),
                       ),
                       const Spacer(),
                       Text(
-                        "Quantity",
+                        AppLocalizations.of(context).translate('quantity'),
                         style: StyleManager.body1Regular(color: ColorManager.blackColor),
                       ),
                       const SizedBox(height: AppSize.s50,),
