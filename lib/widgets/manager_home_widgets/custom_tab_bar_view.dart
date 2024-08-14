@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:project2/screens/Manager_Screens/request_managment.dart';
+import 'package:project2/screens/Manager_Screens/Request_Managmenet_Screen/request_managment.dart';
 
-import '../../screens/Manager_Screens/beneficiary_education.dart';
+import '../../screens/Manager_Screens/Education_Screen/education_screen.dart';
 import '../../screens/Manager_Screens/dashboard_overview.dart';
 import '../../screens/Manager_Screens/staff_management.dart';
 import '../../screens/Manager_Screens/warehouse/old/warehouse.dart';
@@ -21,8 +21,8 @@ class CustomTabBarView extends StatelessWidget {
       children: [
         DashboardOverview(),
         StaffsView(),
-        BeneficiaryEducation(),
-        AllTypeViewManager(),
+        EducationScreen(),
+        WareHouse(),
         RequestManagementScreen()
       ],
     );
