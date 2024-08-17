@@ -74,7 +74,7 @@ class TrainerService {
   Future<void> updateTrainer(int id, Trainer trainer) async {
     try {
       final response = await _dio.post(
-        'http://127.0.0.1:8000/api/updatetrainer/$id',
+        'http://127.0.0.1:8000/api/updateTrainer/$id',
         data: trainer.toJson(),
         options: Options(
           headers: {
@@ -86,7 +86,7 @@ class TrainerService {
       if (response.statusCode != 200) {
         throw Exception('Failed to update trainer');
       }
-    } catch (error) {
+    } on DioError catch (error) {
       throw Exception('Failed to update trainer: $error');
     }
   }

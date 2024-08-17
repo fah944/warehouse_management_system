@@ -46,6 +46,8 @@ class UpdateTrainerDialog extends StatelessWidget {
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter the trainer email';
+                  } else if (!value.contains('@') || !value.endsWith('.com')) {
+                    return 'Please enter a valid email address';
                   }
                   return null;
                 },
@@ -59,6 +61,8 @@ class UpdateTrainerDialog extends StatelessWidget {
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter the trainer phone number';
+                  } else if (value.length != 10) {
+                    return 'Phone number must be exactly 10 digits';
                   }
                   return null;
                 },

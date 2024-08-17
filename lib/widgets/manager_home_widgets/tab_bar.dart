@@ -41,11 +41,11 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
             unselectedLabelColor: ColorManager.bc3,
             labelStyle: TextStyle(fontSize: 12),
             tabs: [
-              Tab(icon: Icon(Icons.home, size: 16), text: 'Overview'),
-              Tab(icon: Icon(Icons.group, size: 16), text: 'Staff Management'),
+
               Tab(icon: Icon(Icons.school, size: 16), text: 'Beneficiary Education'),
+              Tab(icon: Icon(Icons.group, size: 16), text: 'Staff Management'),
               Tab(icon: Icon(Icons.store, size: 16), text: 'Warehouse'),
-              Tab(icon: Icon(Icons.manage_accounts, size: 16), text: 'Request Managment'),
+              Tab(icon: Icon(Icons.manage_accounts, size: 16), text: 'Request Management'),
             ],
           ),
         ),

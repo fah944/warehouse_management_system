@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project2/screens/Secertary_Screens/Trainer/pending_trainer_screen.dart';
+import 'package:go_router/go_router.dart';
 import '../../../Bloc/secertary/trainer/trainer_cubit.dart';
 import '../../../Bloc/secertary/trainer/trainer_state.dart';
 import '../../../models/Secertary Model/trainer_model.dart';
@@ -8,7 +8,6 @@ import '../../../core/utils/color_manager.dart';
 import '../../../widgets/secretary_widgets/trainer_widgets/trainer_header.dart';
 import '../../../widgets/secretary_widgets/trainer_widgets/trainer_list_view.dart';
 import '../../../widgets/secretary_widgets/trainer_widgets/update_trainer_dialog.dart';
-import 'trainer_details.dart';
 
 class TrainerManagementScreen extends StatefulWidget {
   const TrainerManagementScreen({super.key});
@@ -34,10 +33,10 @@ class _TrainerManagementScreenState extends State<TrainerManagementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.bc1,
-      appBar:  AppBar(
+      appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Trainer Management',
+          'Trainers Management',
           style: TextStyle(fontWeight: FontWeight.bold, color: ColorManager.bc5),
         ),
         centerTitle: true,
@@ -53,12 +52,7 @@ class _TrainerManagementScreenState extends State<TrainerManagementScreen> {
               child: IconButton(
                 icon: Icon(Icons.add, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PendingTrainerScreen(),
-                    ),
-                  );
+                  context.go('/pending_trainer');
                 },
                 tooltip: 'Add Trainer',
               ),
@@ -83,12 +77,7 @@ class _TrainerManagementScreenState extends State<TrainerManagementScreen> {
                       onUpdate: (trainer) => _showUpdateDialog(context, trainer),
                       onDelete: (id) => _confirmDelete(context, id),
                       onTap: (id) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TrainerDetailsScreen(trainerId: id),
-                          ),
-                        ).then((_) => _fetchTrainers());
+                        context.go('/trainer_detail/$id');
                       },
                     );
                   } else if (state is TrainerError) {

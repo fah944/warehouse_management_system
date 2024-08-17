@@ -19,9 +19,9 @@ class CustomTabBarView extends StatelessWidget {
     return TabBarView(
       controller: tabController,
       children: [
-        DashboardOverview(),
-        StaffsView(),
+
         EducationScreen(),
+        StaffsView(),
         WareHouse(),
         RequestManagementScreen()
       ],
