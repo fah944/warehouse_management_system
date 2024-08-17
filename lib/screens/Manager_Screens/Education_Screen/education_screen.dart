@@ -1,34 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../Bloc/manager/education_cubit.dart';
 import '../../../Bloc/manager/education_state.dart';
 import '../../../core/utils/color_manager.dart';
-import 'Beneficiaries_Education_Screen/beneficiaries_education_screen.dart';
-import 'Courses_Education_Screen/courses_education_screen.dart';
-import 'Trainer_Manager_Education/trainers_education_screen.dart';
 
 class EducationScreen extends StatelessWidget {
   const EducationScreen({super.key});
 
   void _navigateTo(BuildContext context, String category) {
-    Widget targetScreen;
     switch (category) {
       case 'Courses':
-        targetScreen = CoursesEducationScreen();
+        GoRouter.of(context).go('/courses_education');
         break;
       case 'Beneficiaries':
-        targetScreen = BeneficiariesEducationScreen();
+        GoRouter.of(context).go('/beneficiaries_education');
         break;
       case 'Trainers':
-        targetScreen = TrainersEducationScreen();
+        GoRouter.of(context).go('/trainers_education');
         break;
       default:
-        targetScreen = CoursesEducationScreen();
+        GoRouter.of(context).go('/courses_education');
     }
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => targetScreen),
-    );
   }
 
   @override

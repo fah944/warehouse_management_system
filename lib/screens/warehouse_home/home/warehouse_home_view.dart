@@ -4,7 +4,7 @@ import 'package:project2/core/utils/color_manager.dart';
 
 import '../../../../core/helper/size.dart';
 import '../../../widgets/manager_home_widgets/custom_app_bar.dart';
-import '../../../widgets/manager_home_widgets/main_nav_bar.dart';
+import '../../../widgets/general_widgets/main_nav_bar.dart';
 import '../../../widgets/manager_home_widgets/search_bar.dart';
 import '../category_warehouse/presentation/views/all_category_view.dart';
 import '../reports/report_screen.dart';

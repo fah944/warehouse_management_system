@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:go_router/go_router.dart';
 import '../../../../Bloc/secertary/course/course_detail_cubit.dart';
 import '../../../../Bloc/secertary/course/course_detail_state.dart';
 import '../../../../Bloc/secertary/student/beneficiary_course_cubit.dart';
@@ -9,11 +9,6 @@ import '../../../../Bloc/secertary/trainer/trainer_course_cubit.dart';
 import '../../../../Bloc/secertary/trainer/trainer_course_state.dart';
 import '../../../../core/utils/color_manager.dart';
 import '../../../../widgets/general_widgets/common_scaffold.dart';
-import '../../../Secertary_Screens/Student/beneficiary_details_screen.dart';
-import '../../../Secertary_Screens/Trainer/trainer_details.dart';
-import '../Beneficiaries_Education_Screen/beneficiary_details_education_screen.dart';
-import '../Trainer_Manager_Education/trainer_details_education_screen.dart';
-
 
 class CourseDetailEducation extends StatefulWidget {
   final int courseId;
@@ -31,12 +26,6 @@ class _CourseDetailEducationState extends State<CourseDetailEducation> with Sing
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _fetchData();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
     _fetchData();
   }
 
@@ -61,40 +50,9 @@ class _CourseDetailEducationState extends State<CourseDetailEducation> with Sing
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                 SliverList(
                   delegate: SliverChildListDelegate([
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      elevation: 4,
-                      margin: const EdgeInsets.all(16.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildDetailItem(Icons.book, 'Course Name', course.nameCourse ?? 'N/A'),
-                            _buildDetailItem(Icons.schedule, 'Period', course.coursePeriod.toString()),
-                            _buildDetailItem(Icons.category, 'Type', course.type ?? 'N/A'),
-                            _buildDetailItem(Icons.timeline, 'Session Duration', course.sessionDuration?.toString() ?? 'N/A'),
-                            _buildDetailItem(Icons.timer, 'Sessions Given', course.sessionsGiven?.toString() ?? 'N/A'),
-                            _buildDetailItem(Icons.info_outline, 'Status', course.courseStatus ?? 'N/A'),
-                            _buildDetailItem(Icons.star, 'Specialty', course.specialty ?? 'N/A'),
-                            _buildDetailItem(Icons.description, 'Description', course.description ?? 'N/A'),
-                          ],
-                        ),
-                      ),
-                    ),
+                    _buildCourseDetailCard(course),
                     SizedBox(height: 16.0),
-                    TabBar(
-                      indicatorColor: ColorManager.bc4,
-                      labelColor: ColorManager.bc4,
-                      unselectedLabelColor: ColorManager.bc5,
-                      controller: _tabController,
-                      tabs: [
-                        Tab(text: 'Beneficiaries'),
-                        Tab(text: 'Trainers'),
-                      ],
-                    ),
+                    _buildTabBar(),
                   ]),
                 ),
               ],
@@ -113,6 +71,45 @@ class _CourseDetailEducationState extends State<CourseDetailEducation> with Sing
           return Container();
         }
       },
+    );
+  }
+
+  Widget _buildCourseDetailCard(course) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      elevation: 4,
+      margin: const EdgeInsets.all(16.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildDetailItem(Icons.book, 'Course Name', course.nameCourse ?? 'N/A'),
+            _buildDetailItem(Icons.schedule, 'Period', course.coursePeriod.toString()),
+            _buildDetailItem(Icons.category, 'Type', course.type ?? 'N/A'),
+            _buildDetailItem(Icons.timeline, 'Session Duration', course.sessionDuration?.toString() ?? 'N/A'),
+            _buildDetailItem(Icons.timer, 'Sessions Given', course.sessionsGiven?.toString() ?? 'N/A'),
+            _buildDetailItem(Icons.info_outline, 'Status', course.courseStatus ?? 'N/A'),
+            _buildDetailItem(Icons.star, 'Specialty', course.specialty ?? 'N/A'),
+            _buildDetailItem(Icons.description, 'Description', course.description ?? 'N/A'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabBar() {
+    return TabBar(
+      indicatorColor: ColorManager.bc4,
+      labelColor: ColorManager.bc4,
+      unselectedLabelColor: ColorManager.bc5,
+      controller: _tabController,
+      tabs: [
+        Tab(text: 'Beneficiaries'),
+        Tab(text: 'Trainers'),
+      ],
     );
   }
 
@@ -150,12 +147,8 @@ class _CourseDetailEducationState extends State<CourseDetailEducation> with Sing
                   ),
                   trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BeneficiaryDetailsEducationScreen(beneficiaryId: beneficiary.id),
-                      ),
-                    ).then((_) => _fetchData());
+                    // Use GoRouter to navigate and pass beneficiaryId
+                    context.go('/beneficiary_detail_education/${beneficiary?.id}');
                   },
                 ),
               );
@@ -204,12 +197,8 @@ class _CourseDetailEducationState extends State<CourseDetailEducation> with Sing
                   ),
                   trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TrainerDetailsEducationScreen(trainerId: trainer.id),
-                      ),
-                    ).then((_) => _fetchData());
+                    // Use GoRouter to navigate and pass trainerId
+                    context.go('/trainer_detail_education/${trainer?.id}');
                   },
                 ),
               );

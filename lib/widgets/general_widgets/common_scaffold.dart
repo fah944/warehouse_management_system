@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/utils/color_manager.dart';
 import '../../widgets/manager_home_widgets/custom_app_bar.dart';
-import '../../widgets/manager_home_widgets/main_nav_bar.dart';
+import 'main_nav_bar.dart';
 import '../../widgets/manager_home_widgets/search_bar.dart';
 import '../manager_home_widgets/search_bar_scaffold.dart';
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:project2/screens/Secertary_Screens/Student/add_beneficiary_screen.dart';
 import '../../../Bloc/manager/pending_beneficiary_cubit.dart';
 import '../../../Bloc/manager/pending_beneficiary_state.dart';
@@ -27,13 +28,23 @@ class _PendingBeneficiaryScreenState extends State<PendingBeneficiaryScreen> {
   }
 
   void _navigateToCreateBeneficiaryScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => BeneficiaryCreateScreen(onBeneficiaryAdded: _fetchPendingRequests)),
-    ).then((_) {
-      _fetchPendingRequests();
+    context.go('/add_beneficiary', extra: {
+      'callback': () {
+        print("Returned from add screen");
+        //   _fetchBeneficiaries();
+      },
     });
+
   }
+  // void _navigateToCreateBeneficiaryScreen() {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => BeneficiaryCreateScreen(onBeneficiaryAdded: _fetchPendingRequests)),
+  //   ).then((_) {
+  //     _fetchPendingRequests();
+  //   });
+  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +58,7 @@ class _PendingBeneficiaryScreenState extends State<PendingBeneficiaryScreen> {
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.all(10),
             child: ElevatedButton(
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blue)),
+              style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
               onPressed: _navigateToCreateBeneficiaryScreen,
               child: Text(
                 'Create a New Beneficiary',
