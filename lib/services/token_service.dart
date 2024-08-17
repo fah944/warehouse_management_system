@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import '../models/notification_data.dart';
+
 class TokenService {
   final Dio _dio = Dio();
 
@@ -32,7 +34,6 @@ class TokenService {
         print(response.data['Fcm_token']['fcm_token']);
 
         return response.data['Fcm_token']['fcm_token'];
-        // Ensure this matches the structure of your JSON response
       } else {
         throw Exception('Failed to fetch FCM token for role: $role');
       }
@@ -41,4 +42,20 @@ class TokenService {
     }
   }
 
+  Future<void> storeNotification(NotificationData notification) async {
+    try {
+      final response = await _dio.post(
+        'http://127.0.0.1:8000/api/storenotification',
+        data: notification.toJson(),
+      );
+
+      if (response.statusCode == 200) {
+        print('Notification stored successfully');
+      } else {
+        throw Exception('Failed to store notification');
+      }
+    } catch (error) {
+      throw Exception('Failed to store notification: $error');
+    }
+  }
 }

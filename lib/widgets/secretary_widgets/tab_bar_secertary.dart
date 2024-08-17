@@ -42,10 +42,10 @@ class CustomTabBarSecertary extends StatelessWidget implements PreferredSizeWidg
             unselectedLabelColor: ColorManager.bc3,
             labelStyle: TextStyle(fontSize: 12),
             tabs: [
-              Tab(icon: Icon(Icons.home, size: 16), text: 'Overview'),
+       //       Tab(icon: Icon(Icons.home, size: 16), text: 'Overview'),
               Tab(icon: Icon(Icons.school, size: 16), text: 'Courses Management'),
               Tab(icon: Icon(Icons.person, size: 16), text: 'Beneficiary Management'),
-              Tab(icon: Icon(Icons.group, size: 16), text: 'Coach Management'),
+              Tab(icon: Icon(Icons.group, size: 16), text: 'Trainers Management'),
             ],
           ),
         ),
