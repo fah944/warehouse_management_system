@@ -47,13 +47,14 @@ class RequestItemListItem extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      Text(
+                      allRequestItem.requsetPending.contains("expired_date") ? Text(
                         "${AppLocalizations.of(context).translate('expired_date')}: ${getExpiredDate(allRequestItem.requsetPending)}",
                         style: TextStyle(
                             color: Colors.grey.shade600,
                             fontSize: 14.0
                         ),
-                      ),
+                      )
+                          : const SizedBox(height: 0, width: 0),
                       Text(
                         "${AppLocalizations.of(context).translate('status')} ${allRequestItem.status}",
                         style: TextStyle(
@@ -94,9 +95,6 @@ class RequestItemListItem extends StatelessWidget {
     return name1;
   }
   String getExpiredDate(String list){
-    String name = '';/*allRequestCategory.requsetPending[9] + allRequestCategory.requsetPending[10] + allRequestCategory.requsetPending[11] +
-        allRequestCategory.requsetPending[12] +
-        allRequestCategory.requsetPending[13] + allRequestCategory.requsetPending[14] + allRequestCategory.requsetPending[15] + allRequestCategory.requsetPending[16];*/
     String name1 = "";
     int i = 0;
     for(i = j+18; i < list.length /*list[i] == '"'*/ ; i++){

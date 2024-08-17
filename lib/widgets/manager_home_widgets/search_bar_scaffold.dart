@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Bloc/secertary/student/beneficiary_cubit.dart';
 import '../../Bloc/secertary/course/course_cubit.dart';
 import '../../Bloc/secertary/trainer/trainer_cubit.dart';
+import '../../core/localization/local_cubit/local_cubit.dart';
 import '../../screens/Home/search_screen.dart';
 import '../../services/Secertary Services/beneficiary_service.dart';
 import '../../services/Secertary Services/course_service.dart';
@@ -109,6 +110,18 @@ class SearchBarScaffold extends StatelessWidget {
                 iconSize: 25,
                 icon: Icon(Icons.notifications, color: Colors.black),
                 onPressed: () {},
+              ),
+              const SizedBox(width: 20),
+              IconButton(
+                icon: Icon(Icons.translate),
+                onPressed: () {
+                  final localeCubit = BlocProvider.of<LocaleCubit>(context);
+                  if (localeCubit.state.languageCode == 'en') {
+                    localeCubit.toArabic();
+                  } else {
+                    localeCubit.toEnglish();
+                  }
+                },
               ),
               SizedBox(width: 20),
               Container(

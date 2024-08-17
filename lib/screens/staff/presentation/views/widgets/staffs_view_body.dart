@@ -13,10 +13,11 @@ class StaffsViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations local = AppLocalizations.of(context);
+    //AppLocalizations local = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsetsDirectional.only(
         top: AppPadding.p16,
+        bottom: AppPadding.p16,
         start: AppPadding.p16,
         end: AppPadding.p16,
       ),

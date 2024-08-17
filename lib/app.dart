@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project2/Bloc/manager/pending_trainer_cubit.dart';
 import 'package:project2/Bloc/secertary/trainer/trainer_course_cubit.dart';
+import 'package:project2/screens/warehouse_home/reports/presentation/manager/get_file_cubit/get_file_cubit.dart';
 import 'package:project2/services/Manager_Services/education_service.dart';
 import 'package:project2/services/Manager_Services/pending_trainer_service.dart';
 import 'package:project2/services/Secertary%20Services/beneficiary_course_service.dart';
@@ -49,6 +50,8 @@ import 'screens/warehouse_home/category_warehouse/presentation/manager/create_ca
 import 'screens/warehouse_home/category_warehouse/presentation/manager/update_category_cubit/update_category_cubit.dart';
 import 'screens/warehouse_home/item_warehouse/data/repos/item_repo_impl.dart';
 import 'screens/warehouse_home/item_warehouse/presentation/manager/consume_item_cubit/consume_item_cubit.dart';
+import 'screens/warehouse_home/reports/data/repos/report_repo_impl.dart';
+import 'screens/warehouse_home/reports/presentation/manager/create_report_cubit/create_report_cubit.dart';
 import 'screens/warehouse_home/type_warehouse/data/repos/type_repo_impl.dart';
 import 'screens/warehouse_home/type_warehouse/presentation/manager/create_type_cubit/create_type_cubit.dart';
 import 'screens/warehouse_home/type_warehouse/presentation/manager/get_all_type_cubit/get_all_type_cubit.dart';
@@ -148,6 +151,20 @@ class MyApp extends StatelessWidget {
             getIt.get<ItemRepoImpl>(),
           ),
         ),
+        BlocProvider(
+          create: (context) {
+            return CreateReportCubit(
+              getIt.get<ReportRepoImpl>(),
+            );
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return GetFileCubit(
+              getIt.get<ReportRepoImpl>(),
+            );
+          },
+        ),
         BlocProvider<LocaleCubit>(create: (_) => LocaleCubit()),
       ],
       child: FutureBuilder<bool>(
@@ -167,14 +184,23 @@ class MyApp extends StatelessWidget {
                       : roleSnapshot.data == "warehouseguard"
                       ? '/warehouseHome'
                       : '/';
-                  return MaterialApp(
-                    scaffoldMessengerKey: scaffoldMessengerKey,
-                    navigatorKey: navigatorKey,
-                    debugShowCheckedModeBanner: false,
-                    theme: ThemeManager.appTheme,
-                    initialRoute: initialRoute,
-                    routes: AppRouter.routes,
-                  );
+                  return BlocBuilder<LocaleCubit, Locale>(
+                      buildWhen: (previousState, currentState) => previousState != currentState,
+                      builder: (context, locale) {
+                        return MaterialApp(
+                          scaffoldMessengerKey: scaffoldMessengerKey,
+                          navigatorKey: navigatorKey,
+                          debugShowCheckedModeBanner: false,
+                          theme: ThemeManager.appTheme,
+                          initialRoute: initialRoute,
+                          routes: AppRouter.routes,
+                          supportedLocales: AppLocalizationsSetup.supportedLocales,
+                          localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+                          localeResolutionCallback: AppLocalizationsSetup.localeResolutionCallback,
+                          locale: locale,
+                        );
+                      }
+                    );
                 } else {
                   return const LoginScreen();
                 }

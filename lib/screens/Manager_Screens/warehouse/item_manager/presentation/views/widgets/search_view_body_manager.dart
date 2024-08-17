@@ -14,7 +14,7 @@ class SearchViewBodyManager extends StatelessWidget {
   SearchViewBodyManager({Key? key, required this.typeId, required this.categoryId}) : super(key: key);
 
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController maxQuantityController = TextEditingController(text: "40");
+  final TextEditingController maxQuantityController = TextEditingController(text: "100");
   final TextEditingController minQuantityController = TextEditingController(text: "0");
   final int paginate = 50;
   final int typeId;
@@ -30,6 +30,7 @@ class SearchViewBodyManager extends StatelessWidget {
         return Padding(
           padding: const EdgeInsetsDirectional.only(
             top: AppPadding.p16,
+            bottom: AppPadding.p16,
             start: AppPadding.p16,
             end: AppPadding.p16,
           ),

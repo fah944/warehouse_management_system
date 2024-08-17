@@ -18,11 +18,11 @@ class CustomTabBarView extends StatelessWidget {
   Widget build(BuildContext context) {
     return TabBarView(
       controller: tabController,
-      children: [
+      children: const [
         DashboardOverview(),
         StaffsView(),
         EducationScreen(),
-        WareHouse(),
+        AllTypeViewManager(),
         RequestManagementScreen()
       ],
     );

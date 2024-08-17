@@ -46,6 +46,7 @@
   "please_select_role": "Please select role",
   "save": "Save",
   "please_select_an_image": "Please select an image",
+  "report_title": "Report",
 
   "type_snack_bar_f": "Type created failed",
   "type_snack_bar_s": "Type created successfully",
@@ -104,5 +105,9 @@
   "image_picked_successfully": "Image picked successfully",
   "update_staff": "Update staff",
   "staff_updated_failed": "Staff updated failed",
-  "staff_updated_successfully": "Staff updated successfully"
+  "staff_updated_successfully": "Staff updated successfully",
+
+  "add_report": "Add Report",
+  "report_deleted_successfully": "Report deleted successfully",
+  "report_deleted_failed": "Report deleted failed"
 }

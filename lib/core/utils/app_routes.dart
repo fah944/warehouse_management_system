@@ -9,6 +9,7 @@ import '../../screens/Manager_Screens/profile_screen.dart';
 import '../../screens/login/stafflogin_screen.dart';
 import '../../screens/register/register_screen.dart';
 import '../../screens/warehouse_home/home/warehouse_home_view.dart';
+import '../../screens/warehouse_home/reports/presentation/views/all_report_view.dart';
 
 class AppRouter {
   static const String home = '/';
@@ -16,6 +17,7 @@ class AppRouter {
   static const String profile = '/profile';
   static const String warehouseHome = '/warehouseHome';
   static const String notifications = '/notifications_screen';
+  static const String reportsWarehouse = '/reportsWarehouse';
   static final routes = <String, WidgetBuilder>{
 
     LoginScreen.id:(context) =>LoginScreen(),
@@ -30,6 +32,7 @@ class AppRouter {
     profile: (context) => ProfileScreen(),
     warehouseHome: (context) => const WarehouseManagerHome(),
     notifications: (context) =>  NotificationScreen(),
+    reportsWarehouse: (context) => AllReportView(),
 
 
 

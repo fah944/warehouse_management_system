@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../core/localization/app_localizations.dart';
 import '../../../../../../../core/utils/app_manager.dart';
 import '../../../../../../../core/utils/color_manager.dart';
+import '../../../../../../../widgets/custom_snack_bar.dart';
 import '../../../data/models/all_request_category_model.dart';
 import '../../manager/accept_request_cubit/accept_request_cubit.dart';
 import '../../manager/accept_request_cubit/accept_request_state.dart';
@@ -27,15 +28,17 @@ class RequestCategoryDetailsViewBody extends StatelessWidget {
         if (state is AcceptRequestSuccess) {
           context.read<RequestCategoryCubit>().fetchRequestCategories();
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
+          CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('accept_successfully'),);
+          /*ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(AppLocalizations.of(context).translate('accept_successfully'))),
-          );
+          );*/
         } else if (state is AcceptRequestFailure) {
           context.read<RequestCategoryCubit>().fetchRequestCategories();
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
+          CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('accept_failed'),);
+          /*ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(AppLocalizations.of(context).translate('accept_failed'))),
-          );
+          );*/
         }
       },
       builder: (context, state) {
@@ -44,15 +47,17 @@ class RequestCategoryDetailsViewBody extends StatelessWidget {
             if (stateReject is AcceptRequestSuccess) {
               contextReject.read<RequestCategoryCubit>().fetchRequestCategories();
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
+              CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('reject_successfully'),);
+              /*ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(AppLocalizations.of(context).translate('reject_successfully'))),
-              );
+              );*/
             } else if (stateReject is AcceptRequestFailure) {
               contextReject.read<RequestCategoryCubit>().fetchRequestCategories();
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
+              CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('reject_failed'),);
+              /*ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(AppLocalizations.of(context).translate('reject_failed'))),
-              );
+              );*/
             }
           },
           builder: (contextReject, stateReject) {
