@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:project2/screens/Secertary_Screens/Course/pending_course_sreen.dart';
 import '../../../Bloc/secertary/course/course_cubit.dart';
 import '../../../Bloc/secertary/course/course_state.dart';
 import '../../../core/utils/color_manager.dart';
 import '../../../models/Secertary Model/course_model.dart';
-import 'course_detail_screen.dart';
-import '../../../services/Secertary Services/course_service.dart';
 
 class CourseManagementScreen extends StatefulWidget {
   const CourseManagementScreen({super.key});
@@ -33,7 +32,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
             TextButton(
               child: Text("Cancel"),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop();  // This can remain as-is since it's just closing a dialog
               },
             ),
             TextButton(
@@ -52,15 +51,12 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
   void _showUpdateDialog(BuildContext context, Course course) {
     final _formKey = GlobalKey<FormState>();
     late String _nameCourse = course.nameCourse;
-    late int _coursePeriod = course.coursePeriod ;
+    late int _coursePeriod = course.coursePeriod;
     late String _sessionDuration = course.sessionDuration;
-  //  late String _sessionsGiven = course.sessionsGiven;
     late String _type = course.type;
     late String _courseStatus = course.courseStatus;
     late String _specialty = course.specialty;
     late String _description = course.description;
-
-
 
     showDialog(
       context: context,
@@ -127,19 +123,6 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
                       _sessionDuration = value!;
                     },
                   ),
-                  // TextFormField(
-                  //   initialValue: _sessionsGiven,
-                  //   decoration: InputDecoration(labelText: 'Session Is Given'),
-                  //   validator: (value) {
-                  //     if (value!.isEmpty) {
-                  //       return 'Please enter the Session Is Given';
-                  //     }
-                  //     return null;
-                  //   },
-                  //   onSaved: (value) {
-                  //     _sessionsGiven = value!;
-                  //   },
-                  // ),
                   DropdownButtonFormField<String>(
                     value: _courseStatus,
                     decoration: InputDecoration(labelText: 'Status'),
@@ -192,7 +175,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
             TextButton(
               child: Text("Cancel"),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop();  // This can remain as-is since it's just closing a dialog
               },
             ),
             TextButton(
@@ -204,8 +187,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
                     id: course.id,
                     nameCourse: _nameCourse,
                     coursePeriod: _coursePeriod,
-                    sessionDuration:_sessionDuration ,
-              //      sessionsGiven: _sessionsGiven,
+                    sessionDuration: _sessionDuration,
                     type: _type,
                     courseStatus: _courseStatus,
                     specialty: _specialty,
@@ -245,7 +227,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
               child: IconButton(
                 icon: Icon(Icons.add, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => PendingCourseScreen()));
+                  context.go('/pending_course');  // Replace Navigator.push with context.push
                 },
                 tooltip: 'Add Course',
               ),
@@ -280,7 +262,6 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                         // Text('Period: ${course.sessionsGiven} Hours from ${course.coursePeriod} Hours', style: TextStyle(color: ColorManager.bc4)),
                           Text(
                             'Period: ${course.coursePeriod}',
                             style: TextStyle(color: ColorManager.bc4),
@@ -312,7 +293,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
                         ],
                       ),
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CourseDetailScreen(courseId: course.id,)));
+                        context.go('/course_detail/${course.id}');  // Replace Navigator.push with context.push and pass the course ID in the URL
                       },
                     ),
                   );

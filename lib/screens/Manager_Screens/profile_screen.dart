@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project2/core/utils/color_manager.dart';
-
-
 import '../../Bloc/profile/user_profile_cubit.dart';
-import '../../models/Auth Model/user_profile.dart';
+import '../../models/Auth%20Model/user_profile.dart';
 import '../../widgets/manager_home_widgets/custom_app_bar.dart';
-import '../../widgets/manager_home_widgets/main_nav_bar.dart';
+import '../../widgets/general_widgets/main_nav_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -17,6 +15,9 @@ class ProfileScreen extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     bool isMobile = screenWidth < 600;
     bool isShortScreen = screenHeight < 145;
+
+
+    context.read<UserProfileCubit>().getUserProfile();
 
     return Scaffold(
       key: _scaffoldKey,
@@ -35,7 +36,8 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 if (!isMobile && !isShortScreen)
                   Container(
-                    color: ColorManager.bc0,
+                    color: ColorManager.bc1,
+                    padding: EdgeInsets.all(16),
                     child: Text(
                       'Profile',
                       style: TextStyle(
@@ -44,7 +46,6 @@ class ProfileScreen extends StatelessWidget {
                         color: ColorManager.bluelight,
                       ),
                     ),
-                    padding: EdgeInsets.all(16),
                   ),
                 Expanded(
                   child: Container(
@@ -59,7 +60,9 @@ class ProfileScreen extends StatelessWidget {
                         } else if (state is UserProfileError) {
                           return Center(child: Text(state.message));
                         } else {
-                          return Center(child: Text('Press the profile icon to load the profile'));
+                          return Center(
+                            child: Text('Unexpected state.'),
+                          );
                         }
                       },
                     ),
@@ -111,9 +114,9 @@ class ProfileImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: 60,
-      backgroundImage: imagePath != null
-          ? NetworkImage(imagePath!)
-          : AssetImage('images/unknown.png') as ImageProvider,
+      backgroundImage: imagePath != null && imagePath!.trim().isNotEmpty
+          ? AssetImage('assets/images/unknown.png')
+          : AssetImage('assets/images/unknown.png') as ImageProvider,
       backgroundColor: Colors.grey[200],
     );
   }
@@ -157,9 +160,9 @@ class ProfileInfoCard extends StatelessWidget {
           children: [
             ProfileInfoRow(icon: Icons.email, label: 'Email', value: profile.email),
             Divider(),
-            ProfileInfoRow(icon: Icons.person, label: 'Role', value: profile.type),
+            ProfileInfoRow(icon: Icons.person, label: 'Role', value: profile.role),
             Divider(),
-            ProfileInfoRow(icon: Icons.phone, label: 'Number', value: profile.number.toString()),
+            ProfileInfoRow(icon: Icons.phone, label: 'Number', value: profile.number),
           ],
         ),
       ),
