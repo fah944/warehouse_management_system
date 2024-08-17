@@ -6,7 +6,6 @@ import '../../Bloc/secertary/course/course_cubit.dart';
 import '../../Bloc/secertary/student/beneficiary_cubit.dart';
 import '../../Bloc/secertary/trainer/trainer_cubit.dart';
 import '../../core/utils/color_manager.dart';
-import '../../screens/Home/search_screen.dart';
 import '../../services/Secertary Services/beneficiary_service.dart';
 import '../../services/Secertary Services/course_service.dart';
 import '../../services/Secertary Services/trainer_services.dart';
@@ -69,39 +68,12 @@ class Search_Bar extends StatelessWidget {
                         ),
                       );
                     } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MultiBlocProvider(
-                            providers: [
-                              BlocProvider(
-                                create: (context) =>
-                                    BeneficiaryCubit(BeneficiaryService())
-                                      ..searchBeneficiaries(query),
-                              ),
-                              BlocProvider(
-                                create: (context) =>
-                                    TrainerCubit(TrainerService())
-                                      ..searchTrainers(query),
-                              ),
-                              BlocProvider(
-                                create: (context) =>
-                                    CourseCubit(CourseService())
-                                      ..searchCourses(query),
-                              ),
-                            ],
-                            child: SearchScreen(),
-                          ),
-                        ),
-                      );
                       context.go('/search?q=$query');
                     }
                   },
                   decoration: InputDecoration(
                     hintText: 'Search...',
                     prefixIcon: Icon(Icons.search, color: searchIconColor),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 15.0, horizontal: 20.0),
                     contentPadding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(50.0),
@@ -116,7 +88,6 @@ class Search_Bar extends StatelessWidget {
               IconButton(
                 iconSize: 25,
                 icon: Icon(Icons.notifications, color: Colors.black),
-                onPressed: () {},
                 onPressed: () => _navigateToNotifications(context),
               ),
               const SizedBox(width: 20),
@@ -138,5 +109,4 @@ class Search_Bar extends StatelessWidget {
       ),
     );
   }
-}
 }

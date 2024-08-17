@@ -1,26 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:project2/screens/Secertary_Screens/Student/pending_beneficiary_screen.dart';
+import 'package:project2/screens/Secertary_Screens/Trainer/pending_trainer_screen.dart';
 import 'package:project2/screens/login/login_screen.dart';
-
-import '../../screens/Home/home_screen.dart';
+import 'package:project2/screens/Home/home_screen.dart';
+import 'package:project2/screens/Home/secretary_home.dart';
+import 'package:project2/screens/Manager_Screens/profile_screen.dart';
+import 'package:project2/screens/warehouse_home/home/warehouse_home_view.dart';
+import '../../Bloc/secertary/course/course_cubit.dart';
+import '../../Bloc/secertary/student/beneficiary_cubit.dart';
+import '../../Bloc/secertary/trainer/trainer_cubit.dart';
+import '../../models/Pending Model/pending_beneficiary_request_model.dart';
+import '../../models/Pending Model/pending_course_model.dart';
+import '../../models/Pending Model/pending_trainer.dart';
+import '../../models/Secertary Model/beneficiary_model.dart';
 import '../../screens/Home/manger_home.dart';
 import '../../screens/Home/notifications_screen.dart';
-import '../../screens/Home/secretary_home.dart';
-import '../../screens/Manager_Screens/profile_screen.dart';
+import '../../screens/Home/search_screen.dart';
+import '../../screens/Manager_Screens/Education_Screen/Beneficiaries_Education_Screen/beneficiaries_education_screen.dart';
+import '../../screens/Manager_Screens/Education_Screen/Courses_Education_Screen/courses_education_screen.dart';
+import '../../screens/Manager_Screens/Education_Screen/Trainer_Manager_Education/trainers_education_screen.dart';
+import '../../screens/Manager_Screens/Education_Screen/Trainer_Manager_Education/trainer_details_education_screen.dart';
+import '../../screens/Manager_Screens/Request_Managmenet_Screen/beneficiary_edit_manager_screen.dart';
 import '../../screens/login/stafflogin_screen.dart';
-import '../../screens/register/register_screen.dart';
-import '../../screens/warehouse_home/home/warehouse_home_view.dart';
+import 'package:project2/screens/Secertary_Screens/Course/pending_course_sreen.dart';
+import 'package:project2/screens/Secertary_Screens/Course/course_detail_screen.dart';
+import 'package:project2/screens/Secertary_Screens/Student/beneficiary_details_screen.dart';
+import 'package:project2/screens/Secertary_Screens/Trainer/trainer_details.dart';
+import 'package:project2/screens/Secertary_Screens/Student/update_beneficiary_dialog.dart';
+import 'package:project2/screens/Secertary_Screens/Student/add_beneficiary_screen.dart';
+import 'package:project2/screens/Manager_Screens/Request_Managmenet_Screen/course_detail_manager_screen.dart';
+import 'package:project2/screens/Manager_Screens/Request_Managmenet_Screen/beneficiary_detail_manager_screen.dart';
+import 'package:project2/screens/Manager_Screens/Request_Managmenet_Screen/traner_details_manager_screen.dart';
+import '../../screens/Manager_Screens/Education_Screen/Courses_Education_Screen/course_detail_education.dart';
+import '../../screens/Manager_Screens/Education_Screen/Beneficiaries_Education_Screen/beneficiary_details_education_screen.dart';
+import '../../services/Secertary Services/beneficiary_service.dart';
+import '../../services/Secertary Services/course_service.dart';
+import '../../services/Secertary Services/trainer_services.dart';
 
 class AppRouter {
-  static const String home = '/';
-  static const String secretary_home = '/secretary_home';
-  static const String profile = '/profile';
-  static const String warehouseHome = '/warehouseHome';
-  static const String notifications = '/notifications_screen';
-  static final routes = <String, WidgetBuilder>{
-
-    LoginScreen.id:(context) =>LoginScreen(),
-    RegisterScreen.id:(context) =>LoginScreen(),
-    StaffLoginScreen.id:(context) =>StaffLoginScreen(),
   static final GoRouter router = GoRouter(
     routes: [
       GoRoute(
@@ -171,16 +190,10 @@ class AppRouter {
         },
       ),
 
-    home: (context) => ManagerHome(),
-
-    secretary_home: (context) => SecretaryHome(),
-    profile: (context) => ProfileScreen(),
-    warehouseHome: (context) => const WarehouseManagerHome(),
-    notifications: (context) =>  NotificationScreen(),
 
 
 
-  };
+
       GoRoute(
         path: '/courses_education',
         builder: (context, state) => const CoursesEducationScreen(),
@@ -249,4 +262,3 @@ class AppRouter {
     ],
   );
 }
-

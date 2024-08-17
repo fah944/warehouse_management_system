@@ -51,12 +51,6 @@ class SearchBarScaffold extends StatelessWidget {
           Flexible(
             child: Row(
               children: [
-                IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.black),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
                 // IconButton(
                 //   icon: Icon(Icons.arrow_back, color: Colors.black),
                 //   onPressed: () {
@@ -92,25 +86,6 @@ class SearchBarScaffold extends StatelessWidget {
                           ),
                         );
                       } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MultiBlocProvider(
-                              providers: [
-                                BlocProvider(
-                                  create: (context) => BeneficiaryCubit(BeneficiaryService())..searchBeneficiaries(query),
-                                ),
-                                BlocProvider(
-                                  create: (context) => TrainerCubit(TrainerService())..searchTrainers(query),
-                                ),
-                                BlocProvider(
-                                  create: (context) => CourseCubit(CourseService())..searchCourses(query),
-                                ),
-                              ],
-                              child: SearchScreen(),
-                            ),
-                          ),
-                        );
                         context.go('/search_bar_scaffold?q=$query');
                       }
                     },
@@ -131,7 +106,6 @@ class SearchBarScaffold extends StatelessWidget {
               IconButton(
                 iconSize: 25,
                 icon: Icon(Icons.notifications, color: Colors.black),
-                onPressed: () {},
                 onPressed: () {
                   _navigateToNotifications(context);
                 },
