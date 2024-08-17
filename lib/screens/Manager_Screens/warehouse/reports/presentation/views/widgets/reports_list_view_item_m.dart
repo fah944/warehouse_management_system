@@ -1,19 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/localization/app_localizations.dart';
-import '../../../../../../core/utils/app_manager.dart';
-import '../../../../../../core/utils/color_manager.dart';
-import '../../../../../../core/utils/style_manager.dart';
-import '../../../../../../widgets/icon_btn_widget.dart';
-import '../../../../widget/custom_dialog_widget.dart';
-import '../../../data/models/all_report_model.dart';
-import '../../manager/delete_report_cubit/delete_report_cubit.dart';
-import '../../manager/get_file_cubit/get_file_cubit.dart';
+import '../../../../../../../core/utils/app_manager.dart';
+import '../../../../../../../core/utils/color_manager.dart';
+import '../../../../../../../core/utils/style_manager.dart';
+import '../../../../../../warehouse_home/reports/data/models/all_report_model.dart';
 
-class ReportsListViewItem extends StatelessWidget {
-  ReportsListViewItem({Key? key, required this.allReports, required this.rank}) : super(key: key);
+class ReportsListViewItemM extends StatelessWidget {
+  ReportsListViewItemM({Key? key, required this.allReports, required this.rank}) : super(key: key);
 
   final DataReport allReports;
   final int rank;
@@ -69,18 +62,6 @@ class ReportsListViewItem extends StatelessWidget {
               ),
               const SizedBox(width: AppSize.s50,),
               const Spacer(),
-              Tooltip(
-                message: AppLocalizations.of(context).translate('delete'),
-                child: IconBtnWidget(
-                  onPressed: ()
-                  {
-                    DeleteReportCubit.get(context).fetchDeleteReport(id: allReports.id);
-                  },
-                  icon: Icons.delete,
-                  color: ColorManager.orange,
-                ),
-              ),
-              const SizedBox(height: AppSize.s20,),
             ],
           ),
         )

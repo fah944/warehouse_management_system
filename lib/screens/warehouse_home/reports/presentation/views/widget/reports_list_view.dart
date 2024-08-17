@@ -30,13 +30,13 @@ class ReportsListView extends StatelessWidget {
             listener: (contextGetFile, stateGetFile) {
               if (stateGetFile is GetFileSuccess) {
                 //contextGetFile.read<GetFileCubit>().fetchAllReports(paginate: paginate);
-                CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('category_created_failed'),);
+                CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('get_file_successfully'),);
                 /*ScaffoldMessenger.of(contextGetFile).showSnackBar(
                   SnackBar(
                       content: Text("file successfully"*//*AppLocalizations.of(context).translate('report_deleted_successfully')*//*)),
                 );*/
               } else if (stateGetFile is GetFileFailure) {
-                CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('category_created_failed'),);
+                CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('get_file_failed'),);
                 /*ScaffoldMessenger.of(contextGetFile).showSnackBar(
                   SnackBar(
                       content: Text("file failed"*//*AppLocalizations.of(context).translate('report_deleted_failed')*//*)),

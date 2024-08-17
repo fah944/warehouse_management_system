@@ -183,7 +183,7 @@ class MainNavBar extends StatelessWidget {
                       icon: Icons.bar_chart,
                       title: 'Reports',
                       context: context,
-                      route: AppRouter.home,
+                      route: AppRouter.reportsManager,
                       iconSize: iconSize,
                       fontSize: fontSize,
                     ),

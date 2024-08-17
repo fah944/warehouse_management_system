@@ -75,4 +75,6 @@ abstract class ItemRepo {
   Future<Either<Failure, ExpiredItemsModel>> fetchExpiredItems({
     required int paginate,
   });
+
+  Future<Either<Failure, dynamic>> fetchCheckExpiring();
 }

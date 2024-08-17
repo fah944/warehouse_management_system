@@ -4,9 +4,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../../../../core/utils/app_manager.dart';
 import '../../../../../../../core/utils/color_manager.dart';
-import '../../../../../../../core/utils/style_manager.dart';
 import '../../../../../../core/localization/app_localizations.dart';
+import '../../../../../../widgets/custom_snack_bar.dart';
 import '../../../../../warehouse_home/widget/circular_icon_widget.dart';
+import '../../manager/check_expiring_cubit/check_expiring_cubit.dart';
+import '../../manager/check_expiring_cubit/check_expiring_state.dart';
 import '../../manager/export_to_excel_cubit/export_to_excel_cubit.dart';
 import '../../manager/export_to_excel_cubit/export_to_excel_state.dart';
 import '../../manager/get_all_items_cubit/get_all_items_cubit.dart';
@@ -25,177 +27,209 @@ class AllItemsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ImportFromExcelCubit importCubit = ImportFromExcelCubit.get(context);
-    return BlocConsumer<ImportFromExcelCubit, ImportFromExcelState>(
-      listener: (contextImport, stateImport) {
-        if (stateImport is SelectedFileSuccess) {
-          ImportFromExcelCubit.get(context).fetchImportFromExcel(
-            excelFile: importCubit.selectedImage!,
-          );
-        }
-        if (stateImport is ImportFromExcelFailure) {
-          ScaffoldMessenger.of(contextImport).showSnackBar(
-            SnackBar(content: Text(AppLocalizations.of(context).translate('import_items_failed'))),
-          );
-        } else if (stateImport is ImportFromExcelSuccess) {
-          contextImport.read<GetAllItemsCubit>().fetchAllItems(
-            paginate: 50,
-          );
-          ScaffoldMessenger.of(contextImport).showSnackBar(
-            SnackBar(content: Text(AppLocalizations.of(context).translate('items_imported_successfully'))),
-          );
-        } else if (stateImport is SelectedFileFailure) {
-          ScaffoldMessenger.of(contextImport).showSnackBar(
-            SnackBar(content: Text(AppLocalizations.of(context).translate('file_picked_failed'))),
-          );
-        } else if (stateImport is SelectedFileEmpty) {
-          ScaffoldMessenger.of(contextImport).showSnackBar(
-            SnackBar(content: Text(AppLocalizations.of(context).translate('pick_file_first'))),
-          );
+    return BlocConsumer<CheckExpiringCubit, CheckExpiringState>(
+      listener: (contextCheck, stateCheck) {
+        if (stateCheck is CheckExpiringSuccess) {
+          CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('check_expiring_successfully'),);
+        } else if (stateCheck is CheckExpiringFailure) {
+          CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('check_expiring_failed'),);
         }
       },
-      builder: (contextImport, stateImport) {
-        return BlocConsumer<ExportToExcelCubit, ExportToExcelState>(
-          listener: (context, state) {
-            if (state is ExportToExcelFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(AppLocalizations.of(context).translate('export_items_failed'))),
-              );
-            } else if (state is ExcelFileSaveSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(AppLocalizations.of(context).translate('items_exported_successfully'))),
+      builder: (contextCheck, stateCheck) {
+        return BlocConsumer<ImportFromExcelCubit, ImportFromExcelState>(
+          listener: (contextImport, stateImport) {
+            if (stateImport is SelectedFileSuccess) {
+              ImportFromExcelCubit.get(context).fetchImportFromExcel(
+                excelFile: importCubit.selectedImage!,
               );
             }
+            if (stateImport is ImportFromExcelFailure) {
+              CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('import_items_failed'),);
+              /*ScaffoldMessenger.of(contextImport).showSnackBar(
+                SnackBar(content: Text(AppLocalizations.of(context).translate('import_items_failed'))),
+              );*/
+            } else if (stateImport is ImportFromExcelSuccess) {
+              contextImport.read<GetAllItemsCubit>().fetchAllItems(
+                paginate: 50,
+              );
+              CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('items_imported_successfully'),);
+              /*ScaffoldMessenger.of(contextImport).showSnackBar(
+                SnackBar(content: Text(AppLocalizations.of(context).translate('items_imported_successfully'))),
+              );*/
+            } else if (stateImport is SelectedFileFailure) {
+              CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('file_picked_failed'),);
+              /*ScaffoldMessenger.of(contextImport).showSnackBar(
+                SnackBar(content: Text(AppLocalizations.of(context).translate('file_picked_failed'))),
+              );*/
+            } else if (stateImport is SelectedFileEmpty) {
+              CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('pick_file_first'),);
+              /*ScaffoldMessenger.of(contextImport).showSnackBar(
+                SnackBar(content: Text(AppLocalizations.of(context).translate('pick_file_first'))),
+              );*/
+            }
           },
-          builder: (context, state) {
-            return DefaultTabController(
-              length: 3,
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  top: AppPadding.p16,
-                  bottom: AppPadding.p16,
-                  start: AppPadding.p16,
-                  end: AppPadding.p16,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Tooltip(
-                            message: AppLocalizations.of(context).translate('import_items'),
-                            child: GestureDetector(
-                              onTap: () {
-                                ImportFromExcelCubit.get(context).pickImage();
-                              },
-                              child: circleIconWidget(
-                                  icon: FontAwesomeIcons.fileImport,
-                                  backgroundColor: Colors.transparent,
-                                  color: ColorManager.blue,
-                                  radius: 30.0,
-                                  size: 25.0
-                              ),
-                            ),
-                          ),
-                          Tooltip(
-                            message: AppLocalizations.of(context).translate('export_items'),
-                            child: GestureDetector(
-                              onTap: () {
-                                BlocProvider.of<ExportToExcelCubit>(context).fetchExportToExcel(fields: ["id","name","quantity"]);
-                              },
-                              child: circleIconWidget(
-                                  icon: FontAwesomeIcons.fileExport,
-                                  backgroundColor: Colors.transparent,
-                                  color: ColorManager.blue,
-                                  radius: 30.0,
-                                  size: 25.0
-                              ),
-                            ),
-                          ),
-                          Tooltip(
-                            message: AppLocalizations.of(context).translate('search'),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) => SearchView(
-                                      typeId: typeId,
-                                      categoryId: categoryId,
-                                    ),
-                                    transitionDuration: Duration.zero,
-                                    transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+          builder: (contextImport, stateImport) {
+            return BlocConsumer<ExportToExcelCubit, ExportToExcelState>(
+              listener: (context, state) {
+                if (state is ExportToExcelFailure) {
+                  CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('export_items_failed'),);
+                  /*ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(AppLocalizations.of(context).translate('export_items_failed'))),
+                  );*/
+                } else if (state is ExcelFileSaveSuccess) {
+                  CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('items_exported_successfully'),);
+                  /*ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(AppLocalizations.of(context).translate('items_exported_successfully'))),
+                  );*/
+                }
+              },
+              builder: (context, state) {
+                return DefaultTabController(
+                  length: 3,
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      top: AppPadding.p16,
+                      bottom: AppPadding.p16,
+                      start: AppPadding.p16,
+                      end: AppPadding.p16,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Tooltip(
+                                message: AppLocalizations.of(context).translate('check_expiring'),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    CheckExpiringCubit.get(context).fetchCheckExpiring();
+                                  },
+                                  child: circleIconWidget(
+                                      icon: FontAwesomeIcons.houseCircleCheck,
+                                      backgroundColor: Colors.transparent,
+                                      color: ColorManager.blue,
+                                      radius: 30.0,
+                                      size: 25.0
                                   ),
-                                );
-                              },
-                              child: circleIconWidget(
-                                icon: Icons.search_sharp,
-                                backgroundColor: Colors.transparent,
-                                color: ColorManager.blue,
-                                size: AppSize.s30,
-                                radius: AppSize.s20,
+                                ),
                               ),
-                            ),
-                          ),
-                          Tooltip(
-                            message: AppLocalizations.of(context).translate('add_item'),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => CreateItemView(
-                                    typeId: typeId,
-                                    categoryId: categoryId,
-                                  ),),
-                                );
-                              },
-                              child: circleIconWidget(
-                                icon: Icons.add_circle_outline,
-                                backgroundColor: Colors.transparent,
-                                color: ColorManager.blue,
-                                size: AppSize.s30,
-                                radius: AppSize.s20,
+                              Tooltip(
+                                message: AppLocalizations.of(context).translate('import_items'),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    ImportFromExcelCubit.get(context).pickImage();
+                                  },
+                                  child: circleIconWidget(
+                                      icon: FontAwesomeIcons.fileImport,
+                                      backgroundColor: Colors.transparent,
+                                      color: ColorManager.blue,
+                                      radius: 30.0,
+                                      size: 25.0
+                                  ),
+                                ),
                               ),
-                            ),
+                              Tooltip(
+                                message: AppLocalizations.of(context).translate('export_items'),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    BlocProvider.of<ExportToExcelCubit>(context).fetchExportToExcel(fields: ["id","name","quantity"]);
+                                  },
+                                  child: circleIconWidget(
+                                      icon: FontAwesomeIcons.fileExport,
+                                      backgroundColor: Colors.transparent,
+                                      color: ColorManager.blue,
+                                      radius: 30.0,
+                                      size: 25.0
+                                  ),
+                                ),
+                              ),
+                              Tooltip(
+                                message: AppLocalizations.of(context).translate('search'),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (_, __, ___) => SearchView(
+                                          typeId: typeId,
+                                          categoryId: categoryId,
+                                        ),
+                                        transitionDuration: Duration.zero,
+                                        transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+                                      ),
+                                    );
+                                  },
+                                  child: circleIconWidget(
+                                    icon: Icons.search_sharp,
+                                    backgroundColor: Colors.transparent,
+                                    color: ColorManager.blue,
+                                    size: AppSize.s30,
+                                    radius: AppSize.s20,
+                                  ),
+                                ),
+                              ),
+                              Tooltip(
+                                message: AppLocalizations.of(context).translate('add_item'),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => CreateItemView(
+                                        typeId: typeId,
+                                        categoryId: categoryId,
+                                      ),),
+                                    );
+                                  },
+                                  child: circleIconWidget(
+                                    icon: Icons.add_circle_outline,
+                                    backgroundColor: Colors.transparent,
+                                    color: ColorManager.blue,
+                                    size: AppSize.s30,
+                                    radius: AppSize.s20,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: AppSize.s20,
-                    ),
-                    // Add TabBar in the AppBar
-                    SizedBox(
-                      height: AppSize.s50,
-                      child: AppBar(
-                        bottom: const TabBar(
-                          indicatorColor: ColorManager.bc4,
-                          labelColor: ColorManager.bc4,
-                          unselectedLabelColor: ColorManager.bc5,
-                          tabs: [
-                            Tab(text: 'All Items'),
-                            Tab(text: 'Expiring Items'), // اسم التاب الثاني
-                            Tab(text: 'Expired Items'), // اسم التاب الثاني
-                          ],
                         ),
-                      ),
+                        const SizedBox(
+                          height: AppSize.s20,
+                        ),
+                        // Add TabBar in the AppBar
+                        SizedBox(
+                          height: AppSize.s50,
+                          child: AppBar(
+                            bottom: const TabBar(
+                              indicatorColor: ColorManager.bc4,
+                              labelColor: ColorManager.bc4,
+                              unselectedLabelColor: ColorManager.bc5,
+                              tabs: [
+                                Tab(text: 'All Items'),
+                                Tab(text: 'Expiring Items'),
+                                Tab(text: 'Expired Items'),
+                              ],
+                            ),
+                          ),
+                        ),
+                        // Add TabBarView for displaying content
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              ItemListView(typeId: typeId, categoryId: categoryId,),
+                              ExpiringItemListView(typeId: typeId, categoryId: categoryId,),
+                              ExpiredItemListView(typeId: typeId, categoryId: categoryId,),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    // Add TabBarView for displaying content
-                    const Expanded(
-                      child: TabBarView(
-                        children: [
-                          ItemListView(), // القائمة الأولى
-                          ExpiringItemListView(), // القائمة الثانية
-                          ExpiredItemListView(),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             );
           },
         );

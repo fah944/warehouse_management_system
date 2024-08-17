@@ -358,4 +358,23 @@ class ItemRepoImpl implements ItemRepo {
       return left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, dynamic>> fetchCheckExpiring() async {
+    try {
+      var data = await (dioApiService.get(
+          endPoint: 'items/check-expiring',
+          token: await Constants.token
+      ));
+      log(data.toString());
+      //ExpiredItemsModel expiredItemsModel;
+      //expiredItemsModel = ExpiredItemsModel.fromJson(data);
+      return right("expiredItemsModel");
+    } catch (e) {
+      if (e is DioError){
+        return left(ServerFailure.fromDioError(e),);
+      }
+      return left(ServerFailure(e.toString()));
+    }
+  }
 }

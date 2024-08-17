@@ -86,6 +86,9 @@
   "item_updated_failed": "لم يتم تحديث العنصر",
   "max": "الكمية العليا: ",
   "min": "الكمية الدنيا: ",
+  "check_expiring_successfully": "تم التحقق من انتهاء الصلاحية بنجاح",
+  "check_expiring_failed": "فشل التحقق من انتهاء الصلاحية",
+  "check_expiring": "التحقق من انتهاء الصلاحية",
 
   "category_title": "التصنيفات",
 
@@ -109,5 +112,10 @@
 
   "add_report": "أضف تقريراً",
   "report_deleted_successfully": "تم حذف التقرير بنجاح",
-  "report_deleted_failed": "فشل الحذف"
+  "report_deleted_failed": "فشل الحذف",
+  "no_title": "بلا عنوان",
+  "no_body": "لا يوجد موضوع",
+  "enter_body": "ادخل الموضوع",
+  "add_new_report": "انشئ تقريراً",
+  "enter_title": "ادخل العنوان"
 }

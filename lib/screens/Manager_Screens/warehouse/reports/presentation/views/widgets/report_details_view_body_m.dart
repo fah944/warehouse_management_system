@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../../core/localization/app_localizations.dart';
-import '../../../../../../core/utils/app_manager.dart';
-import '../../../../../../widgets/custom_snack_bar.dart';
-import '../../manager/details_report_cubit/details_report_cubit.dart';
-import '../../manager/details_report_cubit/details_report_state.dart';
-import '../../manager/get_file_cubit/get_file_cubit.dart';
-import '../../manager/get_file_cubit/get_file_state.dart';
+import '../../../../../../../core/localization/app_localizations.dart';
+import '../../../../../../../core/utils/app_manager.dart';
+import '../../../../../../../widgets/custom_snack_bar.dart';
+import '../../../../../../warehouse_home/reports/presentation/manager/details_report_cubit/details_report_cubit.dart';
+import '../../../../../../warehouse_home/reports/presentation/manager/details_report_cubit/details_report_state.dart';
+import '../../../../../../warehouse_home/reports/presentation/manager/get_file_cubit/get_file_cubit.dart';
+import '../../../../../../warehouse_home/reports/presentation/manager/get_file_cubit/get_file_state.dart';
 
-class ReportDetailsViewBody extends StatelessWidget {
-  const ReportDetailsViewBody({Key? key}) : super(key: key);
+class ReportDetailsViewBodyM extends StatelessWidget {
+  const ReportDetailsViewBodyM({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,23 +19,14 @@ class ReportDetailsViewBody extends StatelessWidget {
         return BlocConsumer<GetFileCubit, GetFileState>(
           listener: (contextGetFile, stateGetFile) {
             if (stateGetFile is GetFileSuccess) {
-              //contextGetFile.read<GetFileCubit>().fetchAllReports(paginate: paginate);
-              CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('report_deleted_successfully'),);
-              /*ScaffoldMessenger.of(contextGetFile).showSnackBar(
-                const SnackBar(
-                    content: Text("file successfully"*//*AppLocalizations.of(context).translate('report_deleted_successfully')*//*)),
-              );*/
+              CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('get_file_successfully'),);
             } else if (stateGetFile is GetFileFailure) {
-              CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('report_deleted_failed'),);
-              /*ScaffoldMessenger.of(contextGetFile).showSnackBar(
-                const SnackBar(
-                    content: Text("file failed"*//*AppLocalizations.of(context).translate('report_deleted_failed')*//*)),
-              );*/
+              CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('get_file_failed'),);
             }
           },
           builder: (contextGetFile, stateGetFile) {
             if (state is DetailsReportSuccess) {
-              final TextEditingController bodyController = TextEditingController(text: state.report.body!.isNotEmpty ? state.report.body! : AppLocalizations.of(context).translate('no_body'));
+              final TextEditingController bodyController = TextEditingController(text: state.report.body!.isNotEmpty ? state.report.body! : 'No title');
               return Padding(
                 padding: const EdgeInsets.all(AppSize.s16),
                 child: SingleChildScrollView(

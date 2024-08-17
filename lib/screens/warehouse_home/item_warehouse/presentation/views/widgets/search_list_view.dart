@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/localization/app_localizations.dart';
 import '../../../../../../core/utils/app_manager.dart';
+import '../../../data/models/search_items_model.dart';
 import '../../manager/consume_item_cubit/consume_item_cubit.dart';
 import '../../manager/consume_item_cubit/consume_item_state.dart';
 import '../../manager/delete_item_cubit/delete_item_cubit.dart';
@@ -13,7 +16,7 @@ import '../item_details_view.dart';
 import 'search_list_view_item.dart';
 
 class SearchListView extends StatelessWidget {
-  const SearchListView({Key? key, required this.name, required this.maxQuantity, required this.minQuantity, required this.typeId, required this.categoryId,}) : super(key: key);
+  SearchListView({Key? key, required this.name, required this.maxQuantity, required this.minQuantity, required this.typeId, required this.categoryId,}) : super(key: key);
 
   final String name;
   final int typeId;
@@ -21,10 +24,12 @@ class SearchListView extends StatelessWidget {
   final int maxQuantity;
   final int minQuantity;
   final int paginate = 50;
+  List<DataSearch>? allChildCategory = [];
 
   @override
   Widget build(BuildContext context) {
     SearchItemCubit cubit = SearchItemCubit.get(context);
+    allChildCategory!.clear();
     return BlocConsumer<SearchItemCubit, SearchItemState>(
         listener: (context, state) {
 
@@ -84,22 +89,36 @@ class SearchListView extends StatelessWidget {
                   }
                 },
                 builder: (contextConsume, stateConsume) {
+                  allChildCategory!.clear();
                   if(state is SearchItemSuccess) {
-                    return state.allSearchItems.dataSearch!.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
+                    for(int i = 0; i < state.allSearchItems.dataSearch!.length; i++)
+                    {
+                      /*log('i ${i}');
+                      log('state.allItems.dataView!.length ${state.allSearchItems.dataSearch!.length}');
+                      log('state.allItems.dataView.id ${state.allSearchItems.dataSearch![i].id}');
+                      log('state.allItems.dataView.name ${state.allSearchItems.dataSearch![i].name}');
+                      log('state.allItems.dataView.typeId ${state.allSearchItems.dataSearch![i].typeId}');
+                      log('state.allItems.dataView.categoryId ${state.allSearchItems.dataSearch![i].categoryId}');*/
+                      if(state.allSearchItems.dataSearch![i].typeId == typeId && state.allSearchItems.dataSearch![i].categoryId == categoryId) {
+                        allChildCategory!.add(state.allSearchItems.dataSearch![i]);
+                      }
+                    }
+                    log('childCategory ${allChildCategory.toString()}');
+                    return allChildCategory!.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
                         : Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ListView.separated(
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: state.allSearchItems.dataSearch!.length,
+                          itemCount: allChildCategory!.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => ItemDetailsView(id: state.allSearchItems.dataSearch![index].id,),));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => ItemDetailsView(id: allChildCategory![index].id,),));
                             },
                             child: SearchListViewItem(
-                              allSearchItems: state.allSearchItems.dataSearch![index],
+                              allSearchItems: allChildCategory![index],
                               rank: 1 + index,
                             ),
                           ),

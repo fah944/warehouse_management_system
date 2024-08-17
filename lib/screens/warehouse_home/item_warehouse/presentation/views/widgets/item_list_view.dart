@@ -1,8 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../core/utils/app_manager.dart';
 import '../../../../../../core/localization/app_localizations.dart';
+import '../../../../../../widgets/custom_snack_bar.dart';
+import '../../../data/models/all_items_model.dart';
+import '../../../data/models/expired_items_model.dart';
+import '../../../data/models/expiring_soon_items_model.dart';
 import '../../manager/consume_item_cubit/consume_item_cubit.dart';
 import '../../manager/consume_item_cubit/consume_item_state.dart';
 import '../../manager/delete_item_cubit/delete_item_cubit.dart';
@@ -17,14 +23,17 @@ import '../item_details_view.dart';
 import 'item_list_view_item.dart';
 
 class ItemListView extends StatelessWidget {
-  const ItemListView({Key? key}) : super(key: key);
+  ItemListView({Key? key, required this.typeId, required this.categoryId}) : super(key: key);
 
+  final int typeId;
+  final int categoryId;
   final int paginate = 50;
+  List<DataView>? allChildCategory = [];
 
   @override
   Widget build(BuildContext context) {
     GetAllItemsCubit cubit = GetAllItemsCubit.get(context);
-    //return Text('data');
+    allChildCategory!.clear();
     return BlocConsumer<GetAllItemsCubit, GetAllItemsState>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -44,13 +53,15 @@ class ItemListView extends StatelessWidget {
                       contextInner.read<GetAllItemsCubit>().fetchAllItems(
                           paginate: paginate
                       );
-                      ScaffoldMessenger.of(contextInner).showSnackBar(
+                      CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('item_deleted_successfully'),);
+                      /*ScaffoldMessenger.of(contextInner).showSnackBar(
                         SnackBar(content: Text(AppLocalizations.of(context).translate('item_deleted_successfully'))),
-                      );
+                      );*/
                     } else if (stateInner is DeleteItemFailure) {
-                      ScaffoldMessenger.of(contextInner).showSnackBar(
+                      CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('item_deleted_failed'),);
+                      /*ScaffoldMessenger.of(contextInner).showSnackBar(
                         SnackBar(content: Text(AppLocalizations.of(context).translate('item_deleted_failed'))),
-                      );
+                      );*/
                     }
                   },
                   builder: (contextInner, stateInner) {
@@ -60,36 +71,52 @@ class ItemListView extends StatelessWidget {
                           contextConsume.read<GetAllItemsCubit>().fetchAllItems(
                               paginate: paginate
                           );
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('item_decrease_successfully'),);
+                          /*ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(AppLocalizations.of(context).translate('item_decrease_successfully'))),
-                          );
+                          );*/
                         } else if (stateConsume is ConsumeItemFailure) {
                           contextConsume.read<GetAllItemsCubit>().fetchAllItems(
                               paginate: paginate
                           );
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('item_decrease_failed'),);
+                          /*ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(AppLocalizations.of(context).translate('item_decrease_failed'))),
-                          );
+                          );*/
                         }
                       },
                       builder: (contextConsume, stateConsume) {
+                        allChildCategory!.clear();
                         if(state is GetAllItemsSuccess) {
-                          return state.allItems.dataView!.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
+                          for(int i = 0; i < state.allItems.dataView!.length; i++)
+                          {
+                            /*log('i ${i}');
+                            log('state.allItems.dataView!.length ${state.allItems.dataView!.length}');
+                            log('state.allItems.dataView.id ${state.allItems.dataView![i].id}');
+                            log('state.allItems.dataView.name ${state.allItems.dataView![i].name}');
+                            log('state.allItems.dataView.typeId ${state.allItems.dataView![i].typeId}');
+                            log('state.allItems.dataView.categoryId ${state.allItems.dataView![i].categoryId}');*/
+                            if(state.allItems.dataView![i].typeId == typeId && state.allItems.dataView![i].categoryId == categoryId) {
+                              allChildCategory!.add(state.allItems.dataView![i]);
+                            }
+                          }
+                          log('childCategory ${allChildCategory.toString()}');
+                          return allChildCategory!.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
                               : Column(
                             children: [
                               ListView.separated(
                                 physics: const NeverScrollableScrollPhysics(),
-                                itemCount: state.allItems.dataView!.length,
+                                itemCount: allChildCategory!.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) => GestureDetector(
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => ItemDetailsView(id: state.allItems.dataView![index].id),),
+                                      MaterialPageRoute(builder: (context) => ItemDetailsView(id: allChildCategory![index].id),),
                                     );
                                   },
                                   child: ItemListViewItem(
-                                    allItems: state.allItems.dataView![index],
+                                    allItems: allChildCategory![index],
                                     rank: 1 + index,
                                   ),
                                 ),
@@ -145,14 +172,17 @@ class ItemListView extends StatelessWidget {
 }
 
 class ExpiringItemListView extends StatelessWidget {
-  const ExpiringItemListView({Key? key}) : super(key: key);
+  ExpiringItemListView({Key? key, required this.typeId, required this.categoryId}) : super(key: key);
 
+  final int typeId;
+  final int categoryId;
   final int paginate = 50;
+  List<DataExpiring>? allChildCategory = [];
 
   @override
   Widget build(BuildContext context) {
     GetAllItemsCubit cubit = GetAllItemsCubit.get(context);
-    //return Text('data');
+    allChildCategory!.clear();
     return BlocConsumer<ExpiringSoonCubit, ExpiringSoonState>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -162,13 +192,15 @@ class ExpiringItemListView extends StatelessWidget {
                 contextInner.read<GetAllItemsCubit>().fetchAllItems(
                     paginate: paginate
                 );
-                ScaffoldMessenger.of(contextInner).showSnackBar(
+                CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('item_deleted_successfully'),);
+                /*ScaffoldMessenger.of(contextInner).showSnackBar(
                   SnackBar(content: Text(AppLocalizations.of(context).translate('item_deleted_successfully'))),
-                );
+                );*/
               } else if (stateInner is DeleteItemFailure) {
-                ScaffoldMessenger.of(contextInner).showSnackBar(
+                CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('item_deleted_failed'),);
+                /*ScaffoldMessenger.of(contextInner).showSnackBar(
                   SnackBar(content: Text(AppLocalizations.of(context).translate('item_deleted_failed'))),
-                );
+                );*/
               }
             },
             builder: (contextInner, stateInner) {
@@ -178,36 +210,52 @@ class ExpiringItemListView extends StatelessWidget {
                     contextConsume.read<GetAllItemsCubit>().fetchAllItems(
                         paginate: paginate
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('item_decrease_successfully'),);
+                    /*ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(AppLocalizations.of(context).translate('item_decrease_successfully'))),
-                    );
+                    );*/
                   } else if (stateConsume is ConsumeItemFailure) {
                     contextConsume.read<GetAllItemsCubit>().fetchAllItems(
                         paginate: paginate
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('item_decrease_failed'),);
+                    /*ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(AppLocalizations.of(context).translate('item_decrease_failed'))),
-                    );
+                    );*/
                   }
                 },
                 builder: (contextConsume, stateConsume) {
+                  allChildCategory!.clear();
                   if(state is ExpiringSoonItemsSuccess) {
-                    return state.allItemsExpiring.dataExpiring!.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
+                    for(int i = 0; i < state.allItemsExpiring.dataExpiring!.length; i++)
+                    {
+                      /*log('i ${i}');
+                      log('state.allItems.dataView!.length ${state.allItemsExpiring.dataExpiring!.length}');
+                      log('state.allItems.dataView.id ${state.allItemsExpiring.dataExpiring![i].id}');
+                      log('state.allItems.dataView.name ${state.allItemsExpiring.dataExpiring![i].name}');
+                      log('state.allItems.dataView.typeId ${state.allItemsExpiring.dataExpiring![i].typeId}');
+                      log('state.allItems.dataView.categoryId ${state.allItemsExpiring.dataExpiring![i].categoryId}');*/
+                      if(state.allItemsExpiring.dataExpiring![i].typeId == typeId && state.allItemsExpiring.dataExpiring![i].categoryId == categoryId) {
+                        allChildCategory!.add(state.allItemsExpiring.dataExpiring![i]);
+                      }
+                    }
+                    log('childCategory ${allChildCategory.toString()}');
+                    return allChildCategory!.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
                         : Column(
                       children: [
                         ListView.separated(
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: state.allItemsExpiring.dataExpiring!.length,
+                          itemCount: allChildCategory!.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => ItemDetailsView(id: state.allItemsExpiring.dataExpiring![index].id),),
+                                MaterialPageRoute(builder: (context) => ItemDetailsView(id: allChildCategory![index].id),),
                               );
                             },
                             child: ExpiringItemListViewItem(
-                              allItems: state.allItemsExpiring.dataExpiring![index],
+                              allItems: allChildCategory![index],
                               rank: 1 + index,
                             ),
                           ),
@@ -259,14 +307,17 @@ class ExpiringItemListView extends StatelessWidget {
 }
 
 class ExpiredItemListView extends StatelessWidget {
-  const ExpiredItemListView({Key? key}) : super(key: key);
+  ExpiredItemListView({Key? key, required this.typeId, required this.categoryId}) : super(key: key);
 
+  final int typeId;
+  final int categoryId;
   final int paginate = 50;
+  List<DataExpired>? allChildCategory = [];
 
   @override
   Widget build(BuildContext context) {
     GetAllItemsCubit cubit = GetAllItemsCubit.get(context);
-    //return Text('data');
+    allChildCategory!.clear();
     return BlocConsumer<ExpiredCubit, ExpiredState>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -276,13 +327,15 @@ class ExpiredItemListView extends StatelessWidget {
                 contextInner.read<GetAllItemsCubit>().fetchAllItems(
                     paginate: paginate
                 );
-                ScaffoldMessenger.of(contextInner).showSnackBar(
+                CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('item_deleted_successfully'),);
+                /*ScaffoldMessenger.of(contextInner).showSnackBar(
                   SnackBar(content: Text(AppLocalizations.of(context).translate('item_deleted_successfully'))),
-                );
+                );*/
               } else if (stateInner is DeleteItemFailure) {
-                ScaffoldMessenger.of(contextInner).showSnackBar(
+                CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('item_deleted_failed'),);
+                /*ScaffoldMessenger.of(contextInner).showSnackBar(
                   SnackBar(content: Text(AppLocalizations.of(context).translate('item_deleted_failed'))),
-                );
+                );*/
               }
             },
             builder: (contextInner, stateInner) {
@@ -292,36 +345,52 @@ class ExpiredItemListView extends StatelessWidget {
                     contextConsume.read<GetAllItemsCubit>().fetchAllItems(
                         paginate: paginate
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('item_decrease_successfully'),);
+                    /*ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(AppLocalizations.of(context).translate('item_decrease_successfully'))),
-                    );
+                    );*/
                   } else if (stateConsume is ConsumeItemFailure) {
                     contextConsume.read<GetAllItemsCubit>().fetchAllItems(
                         paginate: paginate
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('item_decrease_failed'),);
+                    /*ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(AppLocalizations.of(context).translate('item_decrease_failed'))),
-                    );
+                    );*/
                   }
                 },
                 builder: (contextConsume, stateConsume) {
+                  allChildCategory!.clear();
                   if(state is ExpiredItemsSuccess) {
-                    return state.allItemsExpired.dataExpired!.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
+                    for(int i = 0; i < state.allItemsExpired.dataExpired!.length; i++)
+                    {
+                      /*log('i ${i}');
+                      log('state.allItems.dataView!.length ${state.allItemsExpired.dataExpired!.length}');
+                      log('state.allItems.dataView.id ${state.allItemsExpired.dataExpired![i].id}');
+                      log('state.allItems.dataView.name ${state.allItemsExpired.dataExpired![i].name}');
+                      log('state.allItems.dataView.typeId ${state.allItemsExpired.dataExpired![i].typeId}');
+                      log('state.allItems.dataView.categoryId ${state.allItemsExpired.dataExpired![i].categoryId}');*/
+                      if(state.allItemsExpired.dataExpired![i].typeId == typeId && state.allItemsExpired.dataExpired![i].categoryId == categoryId) {
+                        allChildCategory!.add(state.allItemsExpired.dataExpired![i]);
+                      }
+                    }
+                    log('childCategory ${allChildCategory.toString()}');
+                    return allChildCategory!.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
                         : Column(
                       children: [
                         ListView.separated(
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: state.allItemsExpired.dataExpired!.length,
+                          itemCount: allChildCategory!.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => ItemDetailsView(id: state.allItemsExpired.dataExpired![index].id),),
+                                MaterialPageRoute(builder: (context) => ItemDetailsView(id: allChildCategory![index].id),),
                               );
                             },
                             child: ExpiredItemListViewItem(
-                              allItems: state.allItemsExpired.dataExpired![index],
+                              allItems: allChildCategory![index],
                               rank: 1 + index,
                             ),
                           ),
