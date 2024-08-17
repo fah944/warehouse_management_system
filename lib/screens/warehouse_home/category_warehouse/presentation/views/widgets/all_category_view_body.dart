@@ -6,6 +6,7 @@ import '../../../../../../../core/utils/color_manager.dart';
 import '../../../../../../../core/utils/service_locator.dart';
 import '../../../../../../../core/utils/style_manager.dart';
 import '../../../../../../core/localization/app_localizations.dart';
+import '../../../../../../widgets/custom_snack_bar.dart';
 import '../../../../../warehouse_home/widget/circular_icon_widget.dart';
 import '../../../../../warehouse_home/widget/custom_dialog_widget.dart';
 import '../../../../../warehouse_home/widget/elevated_btn_widget.dart';
@@ -26,19 +27,24 @@ class AllCategoryViewBody extends StatelessWidget {
     return BlocConsumer<CreateCategoryCubit, CreateCategoryState>(
       listener: (context, state) {
         if (state is CreateCategoryFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          categoryController.clear();
+          CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('category_created_failed'),);
+          /*ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(AppLocalizations.of(context).translate('category_created_failed'))),
-          );
+          );*/
         } else if (state is CreateCategorySuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          categoryController.clear();
+          CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('category_submitted_successfully'),);
+          /*ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(AppLocalizations.of(context).translate('category_submitted_successfully'))),
-          );
+          );*/
         }
       },
       builder: (context, state) {
         return Padding(
           padding: const EdgeInsetsDirectional.only(
             top: AppPadding.p16,
+            bottom: AppPadding.p16,
             start: AppPadding.p16,
             end: AppPadding.p16,
           ),

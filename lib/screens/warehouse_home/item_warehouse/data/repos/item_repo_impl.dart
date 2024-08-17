@@ -273,12 +273,12 @@ class ItemRepoImpl implements ItemRepo {
         log('File saved successfully: $filename');
         return right("r");
       } else {
-        print("HELLO");
+        log("HELLO");
         throw Exception('Export failed with status: ${response.statusCode}');
       }
     } catch (e) {
-      print("HELLO1");
-      print(e);
+      log("HELLO1");
+      log(e.toString());
       //throw left(ServerFailure.fromDioError(e));
       return left(ServerFailure(e.toString()));
     }

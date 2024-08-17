@@ -7,6 +7,7 @@ import '../../../../../../core/utils/app_manager.dart';
 import '../../../../../../core/utils/color_manager.dart';
 import '../../../../../../core/utils/service_locator.dart';
 import '../../../../../../core/utils/style_manager.dart';
+import '../../../../../../widgets/custom_snack_bar.dart';
 import '../../../../widget/circular_icon_widget.dart';
 import '../../../../widget/custom_dialog_widget.dart';
 import '../../../../widget/elevated_btn_widget.dart';
@@ -28,24 +29,30 @@ class AllTypeViewBody extends StatelessWidget {
     return BlocConsumer<CreateTypeCubit, CreateTypeState>(
       listener: (context, state) {
         if (state is CreateTypeFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          typeController.clear();
+          CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('type_snack_bar_f'),);
+          /*ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(AppLocalizations.of(context).translate('type_snack_bar_f'))),
-          );
+          );*/
         } else if (state is CreateTypeSuccess) {
+          typeController.clear();
           context.read<GetAllTypeCubit>().fetchAllTypes();
-          ScaffoldMessenger.of(context).showSnackBar(
+          CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('type_snack_bar_s'),);
+          /*ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(AppLocalizations.of(context).translate('type_snack_bar_s'))),
-          );
+          );*/
         }
       },
       builder: (context, state) {
         return Padding(
           padding: const EdgeInsetsDirectional.only(
             top: AppPadding.p16,
+            bottom: AppPadding.p16,
             start: AppPadding.p16,
             end: AppPadding.p16,
           ),
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,

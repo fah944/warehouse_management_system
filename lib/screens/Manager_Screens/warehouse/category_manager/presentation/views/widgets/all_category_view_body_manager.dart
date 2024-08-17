@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../core/utils/app_manager.dart';
-import '../../../../../../../core/utils/color_manager.dart';
 import '../../../../../../../core/utils/service_locator.dart';
-import '../../../../../../../core/utils/style_manager.dart';
 
 import '../../../../../../warehouse_home/category_warehouse/data/repos/category_repo_impl.dart';
 import '../../../../../../warehouse_home/category_warehouse/presentation/manager/delete_category_cubit/delete_category_cubit.dart';
@@ -27,6 +25,7 @@ class AllCategoryViewBodyManager extends StatelessWidget {
           return Padding(
             padding: const EdgeInsetsDirectional.only(
               top: AppPadding.p16,
+              bottom: AppPadding.p16,
               start: AppPadding.p16,
               end: AppPadding.p16,
             ),

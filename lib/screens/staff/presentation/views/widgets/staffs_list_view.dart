@@ -7,6 +7,7 @@ import 'package:project2/screens/staff/presentation/views/staff_details_view.dar
 
 import '../../../../../core/localization/app_localizations.dart';
 import '../../../../../core/utils/app_manager.dart';
+import '../../../../../widgets/custom_snack_bar.dart';
 import '../../manger/delete_staff_cubit/delete_staff_cubit.dart';
 import 'staffs_list_view_item.dart';
 
@@ -24,14 +25,16 @@ class StaffsListView extends StatelessWidget {
         return BlocConsumer<DeleteStaffCubit, DeleteStaffState>(
           listener: (contextInner, stateInner) {
             if (stateInner is DeleteStaffFailure) {
-              ScaffoldMessenger.of(contextInner).showSnackBar(
+              CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('staff_deleted_failed'),);
+              /*ScaffoldMessenger.of(contextInner).showSnackBar(
                 SnackBar(content: Text(local.translate("staff_deleted_failed"))),
-              );
+              );*/
             } else if (stateInner is DeleteStaffSuccess) {
               contextInner.read<FeaturedStaffCubit>().fetchFeaturedStaff();
-              ScaffoldMessenger.of(contextInner).showSnackBar(
+              CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('staff_deleted_successfully'),);
+              /*ScaffoldMessenger.of(contextInner).showSnackBar(
                 SnackBar(content: Text(local.translate("staff_deleted_successfully"))),
-              );
+              );*/
             }
           },
           builder: (contextInner, stateInner) {

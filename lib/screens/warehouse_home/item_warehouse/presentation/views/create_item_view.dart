@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/utils/service_locator.dart';
 import '../../../../../core/localization/app_localizations.dart';
-import '../../../../../widgets/general_widgets/common_scaffold.dart';
+import '../../../home/widget/common_scaffold_wear_house.dart';
 import '../../data/repos/item_repo_impl.dart';
 import '../manager/create_item_cubit/create_item_cubit.dart';
 import 'widgets/create_item_view_body.dart';
@@ -17,7 +17,7 @@ class CreateItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CommonScaffold(
+    return CommonScaffoldWearHouse(
       title: AppLocalizations.of(context).translate('warehouse_home_title'),
       scaffoldKey: _keyScaffold,
       body: BlocProvider(

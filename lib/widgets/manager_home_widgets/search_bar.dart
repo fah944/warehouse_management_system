@@ -104,6 +104,7 @@ class Search_Bar extends StatelessWidget {
                 icon: Icon(Icons.notifications, color: Colors.black),
                 onPressed: () {},
               ),
+              const SizedBox(width: 20),
               IconButton(
                 icon: Icon(Icons.translate),
                 onPressed: () {

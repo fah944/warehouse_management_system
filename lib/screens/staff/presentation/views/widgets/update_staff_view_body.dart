@@ -9,6 +9,7 @@ import '../../../../../core/localization/app_localizations.dart';
 import '../../../../../core/utils/assets_manager.dart';
 import '../../../../../core/utils/color_manager.dart';
 import '../../../../../core/utils/style_manager.dart';
+import '../../../../../widgets/custom_snack_bar.dart';
 import '../../../data/models/show_all_staff_model.dart';
 import '../../manger/featured_staff_cubit/featured_staff_cubit.dart';
 import '../../manger/update_staff_cubit/update_staff_cubit.dart';
@@ -92,9 +93,10 @@ class _UpdateStaffViewBodyState extends State<UpdateStaffViewBody> {
         imageBytes: selectedImage!,
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
+      CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('please_select_an_image'),);
+      /*ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('${AppLocalizations.of(context).translate("please_select_an_image")}.')),
-      );
+      );*/
     }
   }
 
@@ -107,19 +109,22 @@ class _UpdateStaffViewBodyState extends State<UpdateStaffViewBody> {
         if (state is UpdateStaffFailure) {
           context.read<FeaturedStaffCubit>().fetchFeaturedStaff();
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
+          CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('staff_updated_failed'),);
+          /*ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(local.translate("staff_updated_failed"))),
-          );
+          );*/
         } else if (state is UpdateStaffSuccess) {
           context.read<FeaturedStaffCubit>().fetchFeaturedStaff();
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
+          CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('staff_updated_successfully'),);
+          /*ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(local.translate("staff_updated_successfully"))),
-          );
+          );*/
         } else if (state is ImagePickedSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('image_picked_successfully'),);
+          /*ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(local.translate("image_picked_successfully"))),
-          );
+          );*/
         }
       },
       builder: (context, state) =>  Center(

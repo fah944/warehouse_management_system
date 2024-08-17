@@ -13,6 +13,7 @@ class AllTypeViewBodyManager extends StatelessWidget {
     return const Padding(
       padding: EdgeInsetsDirectional.only(
         top: AppPadding.p16,
+        bottom: AppPadding.p16,
         start: AppPadding.p16,
         end: AppPadding.p16,
       ),

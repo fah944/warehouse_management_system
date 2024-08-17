@@ -81,9 +81,12 @@ class CreateItemViewBody extends StatelessWidget {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.width * .02),
                   CustomEditTextField(
+                    readOnly: true,
                     controller: expiredDateController,
                     hintText: AppLocalizations.of(context).translate('expired_date'),
-                    validator: null,
+                    validator: (value) {
+                      return null;
+                    },
                     textCapitalization: TextCapitalization.words,
                     enabled: true,
                     obscureText: false,

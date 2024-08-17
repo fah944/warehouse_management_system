@@ -47,6 +47,127 @@ class CustomDialogFieldWidget extends StatelessWidget {
   }
 }
 
+class CustomBigDialogFieldWidget extends StatelessWidget {
+  const CustomBigDialogFieldWidget({Key? key, required this.title, required this.hintText, required this.onPressed, this.controller, this.validator, required this.hintText2, required this.onPressedIcon, this.controller2, this.validator2}) : super(key: key);
+
+  final String title;
+  final String hintText;
+  final String hintText2;
+  final Function onPressed;
+  final Function onPressedIcon;
+  final TextEditingController? controller;
+  final TextEditingController? controller2;
+  final String? Function(String?)? validator;
+  final String? Function(String?)? validator2;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * .01,
+      width: MediaQuery.of(context).size.width * .1,
+      child: AlertDialog(
+        title: Text(
+          title,
+          style: StyleManager.h3Medium(color: ColorManager.blackColor),
+        ),
+        content: Column(
+          children: [
+            IconButton(
+              onPressed: () {
+                onPressedIcon();
+              },
+              icon: const Icon(
+                Icons.add_photo_alternate_outlined,
+              ),
+            ),
+            TextFormField(
+              autofocus: true,
+              decoration:InputDecoration(
+                hintText: hintText,
+              ),
+              controller: controller,
+              validator: validator ??
+                      (value) {
+                    if (value?.isEmpty ?? true) {
+                      return 'this field must not be empty';
+                    }
+                    return null;
+                  },
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            TextFormField(
+              textCapitalization: TextCapitalization.sentences,
+              textAlign: TextAlign.start,
+              keyboardType: TextInputType.multiline,
+              scrollPhysics: const ScrollPhysics(parent: BouncingScrollPhysics(),),
+              maxLines: 7,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25)),
+                  borderSide: BorderSide(
+                    color: Colors.black38,
+                    width: 1,
+                  ),
+                ),
+                enabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25)),
+                  borderSide: BorderSide(
+                    color: Colors.black38,
+                    width: 1,
+                  ),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25)),
+                  borderSide: BorderSide(
+                    color: Colors.black38,
+                    width: 1,
+                  ),
+                ),
+                hintText: 'Description...',
+                hintStyle: const TextStyle(
+                  //color: defaultColor.withOpacity(.6),
+                  fontSize: 20,
+                ),
+                contentPadding: const EdgeInsetsDirectional.only(
+                  start: 10,
+                  end: 10,
+                  top: 15,
+                  bottom: 10,
+                ),
+                floatingLabelStyle: TextStyle(
+                  color: Colors.grey[400],
+                ),
+              ),
+              style: const TextStyle(
+                color: Colors.black,
+              ),
+              controller: controller2,
+              cursorColor: Colors.blue,
+              validator: (value) {
+                if (value?.isEmpty ?? true) {
+                  return 'this field must not be empty';
+                }
+                return null;
+              },
+            ),
+          ],
+        ),
+        actions: [
+          elevatedbtn(
+            text: 'submit',
+            style: StyleManager.labelMedium(color: ColorManager.blackColor),
+            onPressed:(){
+              onPressed();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class CustomAlertDialogWidget extends StatelessWidget {
   const CustomAlertDialogWidget({Key? key, required this.message, required this.buttonText1, required this.buttonText2, required this.onPressed1, required this.onPressed2,}) : super(key: key);
 

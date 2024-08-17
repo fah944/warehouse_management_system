@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/localization/app_localizations.dart';
+import '../../../../../../widgets/custom_snack_bar.dart';
 import '../../../../item_warehouse/presentation/views/all_items_view.dart';
 import '../../manager/delete_category_cubit/delete_category_cubit.dart';
 import '../../manager/delete_category_cubit/delete_category_state.dart';
@@ -23,13 +24,15 @@ class CategoryGridView extends StatelessWidget {
         return BlocConsumer<UpdateCategoryCubit, UpdateCategoryState>(
           listener: (contextUpdate, stateUpdate) {
             if (stateUpdate is UpdateCategorySuccess) {
-              ScaffoldMessenger.of(contextUpdate).showSnackBar(
+              CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('category_updated_successfully'),);
+              /*ScaffoldMessenger.of(contextUpdate).showSnackBar(
                 SnackBar(content: Text(AppLocalizations.of(context).translate('category_updated_successfully'))),
-              );
+              );*/
             } else if (stateUpdate is UpdateCategoryFailure) {
-              ScaffoldMessenger.of(contextUpdate).showSnackBar(
+              CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('category_updated_failed'),);
+              /*ScaffoldMessenger.of(contextUpdate).showSnackBar(
                 SnackBar(content: Text(AppLocalizations.of(context).translate('category_updated_failed'))),
-              );
+              );*/
             }
           },
           builder: (contextUpdate, stateUpdate) {
@@ -38,13 +41,15 @@ class CategoryGridView extends StatelessWidget {
                 listener: (contextDelete, stateDelete) {
                   if (stateDelete is DeleteCategorySuccess) {
                     contextDelete.read<GetAllCategoryCubit>().fetchAllCategories();
-                    ScaffoldMessenger.of(contextDelete).showSnackBar(
+                    CustomSnackBar.showSnackBar(context, msg: AppLocalizations.of(context).translate('category_created_failed'),);
+                    /*ScaffoldMessenger.of(contextDelete).showSnackBar(
                       SnackBar(content: Text(AppLocalizations.of(context).translate('category_deleted_successfully'))),
-                    );
+                    );*/
                   } else if (stateDelete is DeleteCategoryFailure) {
-                    ScaffoldMessenger.of(contextDelete).showSnackBar(
+                    CustomSnackBar.showErrorSnackBar(context, msg: AppLocalizations.of(context).translate('category_created_failed'),);
+                    /*ScaffoldMessenger.of(contextDelete).showSnackBar(
                       SnackBar(content: Text(AppLocalizations.of(context).translate('category_deleted_failed'))),
-                    );
+                    );*/
                   }
                 },
                 builder: (contextDelete, stateDelete) {

@@ -22,7 +22,7 @@ class StaffDetailsViewBody extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(
                 top: 100.0,
-                bottom: 0.0,
+                bottom: 100.0,
                 left: 100.0,
                 right: 100.0,
             ),
