@@ -1,6 +1,13 @@
+
+
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:file_saver/file_saver.dart';
+import 'package:universal_html/html.dart' as html; // Import the dart:html library
+import '../../core/errors/failures.dart';
 import '../../core/utils/shared_preferences_helper.dart';
 import '../../models/Secertary Model/beneficiary_model.dart';
+import 'dart:typed_data';
 
 class BeneficiaryService {
   final Dio _dio = Dio();
@@ -64,7 +71,7 @@ class BeneficiaryService {
         'numberline': numberLine,
         'numberPhone': numberPhone,
         'numberId': numberId,
-        'educationalAttainment': educationalAttainments.map((e) => e.toJson())
+        'educational': educationalAttainments.map((e) => e.toJson())
             .toList(),
         'previousTrainingCourses': previousTrainingCourses.map((e) =>
             e.toJson()).toList(),
@@ -256,7 +263,7 @@ class BeneficiaryService {
         'numberline': numberLine,
         'numberPhone': numberPhone,
         'numberId': numberId,
-        'educationalAttainment': educationalAttainments.map((e) => e.toJson())
+        'educational': educationalAttainments.map((e) => e.toJson())
             .toList(),
         'previousTrainingCourses': previousTrainingCourses.map((e) =>
             e.toJson()).toList(),
@@ -332,4 +339,78 @@ class BeneficiaryService {
       }
     }
   }
+
+
+
+
+
+  Future<Either<Failure, dynamic>> exportBeneficiariesToExcel(Map<String, dynamic> filters) async {
+    try {
+      final token = await SharedPreferencesHelper.getJwtToken();
+
+      final response = await _dio.post(
+        'http://127.0.0.1:8000/api/beneficiaryexportexcel',
+
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+          responseType: ResponseType.bytes, // Ensures that response is treated as bytes
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final contentDisposition = response.headers['content-disposition']?.first;
+        final filename = contentDisposition?.split('filename=')[1] ?? 'beneficiaries_export.xlsx';
+        final bytes = response.data as Uint8List;
+
+        await FileSaver.instance.saveFile(
+          name: filename,
+          bytes: bytes,
+          ext: "xlsx",
+          mimeType: MimeType.microsoftExcel,
+        );
+
+        return right("Export successful");
+      } else {
+        throw Exception('Failed to export beneficiaries with status: ${response.statusCode}');
+      }
+    } on DioError catch (e) {
+      print("DioError: $e");
+      return left(ServerFailure.fromDioError(e));
+    } catch (e) {
+      print("Error: $e");
+      return left(ServerFailure(e.toString()));
+    }
+  }
+  Future<void> importBeneficiariesFromExcel(List<int> excelFile) async {
+    try {
+      final token = await SharedPreferencesHelper.getJwtToken();
+
+      FormData formData = FormData.fromMap({
+        "excel_file": MultipartFile.fromBytes(
+          excelFile,
+          filename: 'beneficiaries.xlsx',
+        ),
+      });
+
+      final response = await _dio.post(
+        'http://127.0.0.1:8000/api/beneficiaryimportexcel',
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Import failed with status: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Failed to import beneficiaries: $error');
+    }
+  }
 }
+

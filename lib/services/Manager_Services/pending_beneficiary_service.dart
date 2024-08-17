@@ -147,7 +147,7 @@ class PendingBeneficiaryService {
         'numberline': numberLine,
         'numberPhone': numberPhone,
         'numberId': numberId,
-        'educationalAttainment': educationalAttainments.map((e) => e.toJson()).toList(),
+        'educational': educationalAttainments.map((e) => e.toJson()).toList(),
         'previousTrainingCourses': previousTrainingCourses.map((e) => e.toJson()).toList(),
         'foreignLanguages': foreignLanguages.map((e) => e.toJson()).toList(),
         'computerDriving': computerDriving,

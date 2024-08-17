@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../Bloc/manager/pending_beneficiary_cubit.dart';
 import '../../../core/utils/color_manager.dart';
 import '../../../models/Pending Model/pending_beneficiary_request_model.dart';
@@ -11,44 +12,47 @@ import '../../../widgets/manager_home_widgets/update_manager_widgets/previous_tr
 import '../../../widgets/manager_home_widgets/update_manager_widgets/professional_skill__manager_update_widget.dart';
 
 class BeneficiaryEditManagerScreen extends StatelessWidget {
-  final RequsetPending beneficiary;
-  final DataRequest hh;
+  final DataRequest beneficiary;
+  final VoidCallback onPop;
 
-  BeneficiaryEditManagerScreen({required this.beneficiary, required this.hh});
+  BeneficiaryEditManagerScreen({
+    required this.beneficiary,
+    required this.onPop,
+  });
 
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
 
-    late int _serialNumber = beneficiary.serialNumber ?? 0;
-    late String _date = beneficiary.date ?? '';
-    late String _province = beneficiary.province ?? '';
-    late String _name = beneficiary.name ?? '';
-    late String _fatherName = beneficiary.fatherName ?? '';
-    late String _motherName = beneficiary.motherName ?? '';
-    late String _gender = beneficiary.gender ?? '';
-    late String _dateOfBirth = beneficiary.dateOfBirth ?? '';
-    late String _nots = beneficiary.nots ?? '';
-    late String _maritalStatus = beneficiary.maritalStatus ?? '';
-    late String _needAttendant = beneficiary.needAttendant ?? '';
-    late int    _numberFamilyMember = beneficiary.numberFamilyMember ?? 0;
-    late String _losingBreadwinner = beneficiary.losingBreadwinner ?? '';
-    late String _governorate = beneficiary.governorate ?? '';
-    late String _address = beneficiary.address ?? '';
-    late String _email = beneficiary.email ?? '';
-    late String _numberLine = beneficiary.numberline ?? '';
-    late String _numberPhone = beneficiary.numberPhone ?? '';
-    late String _numberId = beneficiary.numberId ?? '';
-    late String _computerDriving = beneficiary.computerDriving ?? '';
-    late String _computerSkills = beneficiary.computerSkills ?? '';
-    late String _sectorPreferences = beneficiary.sectorPreferences ?? '';
-    late String _employment = beneficiary.employment ?? '';
-    late String _supportRequiredTrainingLearning = beneficiary.supportRequiredTrainingLearning ?? '';
-    late String _supportRequiredEntrepreneurship = beneficiary.supportRequiredEntrepreneurship ?? '';
-    late String _careerGuidanceCounselling = beneficiary.careerGuidanceCounselling ?? '';
-    late String _generalNotes = beneficiary.generalNotes ?? '';
-
-    final int? _id = hh.id;  // Ensure beneficiary.id is available and used
+    // Accessing fields within RequsetPending
+    late RequsetPending reqPending = beneficiary.requsetPending!;
+    late int _serialNumber = reqPending.serialNumber ?? 0;
+    late String _date = reqPending.date ?? '';
+    late String _province = reqPending.province ?? '';
+    late String _name = reqPending.name ?? '';
+    late String _fatherName = reqPending.fatherName ?? '';
+    late String _motherName = reqPending.motherName ?? '';
+    late String _gender = reqPending.gender ?? '';
+    late String _dateOfBirth = reqPending.dateOfBirth ?? '';
+    late String _nots = reqPending.nots ?? '';
+    late String _maritalStatus = reqPending.maritalStatus ?? '';
+    late String _needAttendant = reqPending.needAttendant ?? '';
+    late int _numberFamilyMember = reqPending.numberFamilyMember ?? 0;
+    late String _losingBreadwinner = reqPending.losingBreadwinner ?? '';
+    late String _governorate = reqPending.governorate ?? '';
+    late String _address = reqPending.address ?? '';
+    late String _email = reqPending.email ?? '';
+    late String _numberLine = reqPending.numberline ?? '';
+    late String _numberPhone = reqPending.numberPhone ?? '';
+    late String _numberId = reqPending.numberId ?? '';
+    late String _computerDriving = reqPending.computerDriving ?? '';
+    late String _computerSkills = reqPending.computerSkills ?? '';
+    late String _sectorPreferences = reqPending.sectorPreferences ?? '';
+    late String _employment = reqPending.employment ?? '';
+    late String _supportRequiredTrainingLearning = reqPending.supportRequiredTrainingLearning ?? '';
+    late String _supportRequiredEntrepreneurship = reqPending.supportRequiredEntrepreneurship ?? '';
+    late String _careerGuidanceCounselling = reqPending.careerGuidanceCounselling ?? '';
+    late String _generalNotes = reqPending.generalNotes ?? '';
 
     return CommonScaffold(
       title: 'Update Beneficiary',
@@ -100,9 +104,7 @@ class BeneficiaryEditManagerScreen extends StatelessWidget {
                   ]),
                   _buildRow([
                     _buildTextFormField('Number Line', _numberLine, (value) => _numberLine = value!),
-               //    _buildTextFormField('Number Phone', _numberPhone.toString(), (value) => _numberPhone = int.parse(value!)),
-
-               _buildTextFormField('Number Phone', _numberPhone, (value) => _numberPhone = value!)
+                    _buildTextFormField('Number Phone', _numberPhone, (value) => _numberPhone = value!)
                   ]),
                   _buildRow([
                     _buildTextFormField('Number ID', _numberId, (value) => _numberId = value!),
@@ -124,23 +126,23 @@ class BeneficiaryEditManagerScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   DisabilityManagerUpdateWidget(
                     title: 'Personal Disabilities',
-                    disabilities: beneficiary.thereIsDisbility ?? [],
+                    disabilities: reqPending.thereIsDisbility ?? [],
                   ),
                   DisabilityManagerUpdateWidget(
                     title: 'Family Member Disabilities',
-                    disabilities: beneficiary.thereIsDisbilityFamilyMember ?? [],
+                    disabilities: reqPending.thereIsDisbilityFamilyMember ?? [],
                   ),
                   EducationalAttainmentManagerUpdateWidget(
-                    educationalAttainments: beneficiary.educationalAttainments ?? [],
+                    educationalAttainments: reqPending.educationalAttainments ?? [],
                   ),
                   PreviousTrainingCourseManagerUpdateWidget(
-                    previousTrainingCourses: beneficiary.previousTrainingCourses ?? [],
+                    previousTrainingCourses: reqPending.previousTrainingCourses ?? [],
                   ),
                   ForeignLanguageManagerUpdateWidget(
-                    foreignLanguages: beneficiary.foreignLanguages ?? [],
+                    foreignLanguages: reqPending.foreignLanguages ?? [],
                   ),
                   ProfessionalSkillManagerUpdateWidget(
-                    professionalSkills: beneficiary.professionalSkills ?? [],
+                    professionalSkills: reqPending.professionalSkills ?? [],
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
@@ -148,8 +150,50 @@ class BeneficiaryEditManagerScreen extends StatelessWidget {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
+
+                        final updatedRequsetPending = RequsetPending(
+                          serialNumber: _serialNumber,
+                          date: _date,
+                          province: _province,
+                          name: _name,
+                          fatherName: _fatherName,
+                          motherName: _motherName,
+                          gender: _gender,
+                          dateOfBirth: _dateOfBirth,
+                          nots: _nots,
+                          maritalStatus: _maritalStatus,
+                          needAttendant: _needAttendant,
+                          numberFamilyMember: _numberFamilyMember,
+                          losingBreadwinner: _losingBreadwinner,
+                          governorate: _governorate,
+                          address: _address,
+                          email: _email,
+                          numberline: _numberLine,
+                          numberPhone: _numberPhone,
+                          numberId: _numberId,
+                          computerDriving: _computerDriving,
+                          computerSkills: _computerSkills,
+                          sectorPreferences: _sectorPreferences,
+                          employment: _employment,
+                          supportRequiredTrainingLearning: _supportRequiredTrainingLearning,
+                          supportRequiredEntrepreneurship: _supportRequiredEntrepreneurship,
+                          careerGuidanceCounselling: _careerGuidanceCounselling,
+                          generalNotes: _generalNotes,
+                          thereIsDisbility: reqPending.thereIsDisbility,
+                          thereIsDisbilityFamilyMember: reqPending.thereIsDisbilityFamilyMember,
+                          educationalAttainments: reqPending.educationalAttainments,
+                          previousTrainingCourses: reqPending.previousTrainingCourses,
+                          foreignLanguages: reqPending.foreignLanguages,
+                          professionalSkills: reqPending.professionalSkills,
+                        );
+
+                        // Update the DataRequest object
+                        final updatedDataRequest = beneficiary.copyWith(
+                          requsetPending: updatedRequsetPending,
+                        );
+
                         context.read<PendingBeneficiaryCubit>().updateBeneficiary(
-                          _id!,
+                          updatedDataRequest.id!,  // Pass the ID
                           _serialNumber,
                           _date,
                           _province,
@@ -160,10 +204,10 @@ class BeneficiaryEditManagerScreen extends StatelessWidget {
                           _dateOfBirth,
                           _nots,
                           _maritalStatus,
-                          beneficiary.thereIsDisbility ?? [],
+                          reqPending.thereIsDisbility ?? [],
                           _needAttendant,
                           _numberFamilyMember,
-                          beneficiary.thereIsDisbilityFamilyMember ?? [],
+                          reqPending.thereIsDisbilityFamilyMember ?? [],
                           _losingBreadwinner,
                           _governorate,
                           _address,
@@ -171,12 +215,12 @@ class BeneficiaryEditManagerScreen extends StatelessWidget {
                           _numberLine,
                           _numberPhone,
                           _numberId,
-                          beneficiary.educationalAttainments ?? [],
-                          beneficiary.previousTrainingCourses ?? [],
-                          beneficiary.foreignLanguages ?? [],
+                          reqPending.educationalAttainments ?? [],
+                          reqPending.previousTrainingCourses ?? [],
+                          reqPending.foreignLanguages ?? [],
                           _computerDriving,
                           _computerSkills,
-                          beneficiary.professionalSkills ?? [],
+                          reqPending.professionalSkills ?? [],
                           _sectorPreferences,
                           _employment,
                           _supportRequiredTrainingLearning,
@@ -184,7 +228,8 @@ class BeneficiaryEditManagerScreen extends StatelessWidget {
                           _careerGuidanceCounselling,
                           _generalNotes,
                         );
-                        Navigator.of(context).pop(true);  // Pass true to indicate successful update
+                        onPop();
+                        context.go('/manager_home?tab=3');
                       }
                     },
                   ),

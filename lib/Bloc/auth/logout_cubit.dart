@@ -9,9 +9,9 @@ class LogoutCubit extends Cubit<void> {
 
   Future<void> logout() async {
     try {
+      await SharedPreferencesHelper.clearUserRole();
       await _loginService.logout();
       await SharedPreferencesHelper.clearJwtToken();
-      await SharedPreferencesHelper.clearUserRole();
 
       emit(null);
     } catch (e) {
