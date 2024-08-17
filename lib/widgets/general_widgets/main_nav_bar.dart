@@ -94,13 +94,24 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../Bloc/auth/logout_cubit.dart';
-import '../../core/utils/app_routes.dart';
 import '../../core/utils/color_manager.dart';
-import '../../screens/login/login_screen.dart';
+import '../../core/utils/shared_preferences_helper.dart';
 
 class MainNavBar extends StatelessWidget {
   const MainNavBar({super.key});
+  Future<void> _navigateBasedOnRole(BuildContext context) async {
+    final String? role = await SharedPreferencesHelper.getUserRole();
+
+    if (role == "secretary") {
+      context.go('/secretary_home');
+    } else if (role == "manager") {
+      context.go('/manager_home');
+    } else {
+      context.go('/');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +185,16 @@ class MainNavBar extends StatelessWidget {
                       icon: Icons.dashboard,
                       title: 'Dashboard',
                       context: context,
-                      route: AppRouter.home,
+                      iconSize: iconSize,
+                      fontSize: fontSize,
+                      onTap: () => _navigateBasedOnRole(context),
+                    ),
+                    _buildDivider(),
+                    _buildNavItem(
+                      icon: Icons.person,
+                      title: 'Profile',
+                      context: context,
+                      route: '/profile',
                       iconSize: iconSize,
                       fontSize: fontSize,
                     ),
@@ -183,11 +203,12 @@ class MainNavBar extends StatelessWidget {
                       icon: Icons.bar_chart,
                       title: 'Reports',
                       context: context,
-                      route: AppRouter.home,
+                      route: '/reports',
                       iconSize: iconSize,
                       fontSize: fontSize,
                     ),
                     _buildDivider(),
+
                   ],
                 ),
               ),
@@ -197,7 +218,7 @@ class MainNavBar extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   context.read<LogoutCubit>().logout();
-                  Navigator.of(context).pushNamedAndRemoveUntil(LoginScreen.id, (route) => false);
+                  context.go('/');
                 },
                 child: Material(
                   color: ColorManager.bluelight,
@@ -230,16 +251,13 @@ class MainNavBar extends StatelessWidget {
     required IconData icon,
     required String title,
     required BuildContext context,
-    required String route,
+    String? route,
     required double iconSize,
     required double fontSize,
+    VoidCallback? onTap,
   }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-      ),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
       child: ListTile(
         leading: Icon(icon, color: Colors.white, size: iconSize),
         title: Text(
@@ -250,10 +268,12 @@ class MainNavBar extends StatelessWidget {
             fontWeight: FontWeight.normal,
           ),
         ),
-        onTap: () {
-          Navigator.of(context).pop();
-          Navigator.of(context).pushNamed(route);
-        },
+        onTap: onTap ??
+                () {
+              if (route != null) {
+                context.go(route);
+              }
+            },
       ),
     );
   }

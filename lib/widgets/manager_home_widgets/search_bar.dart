@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../Bloc/notification_cubit.dart';
 import '../../Bloc/secertary/course/course_cubit.dart';
 import '../../Bloc/secertary/student/beneficiary_cubit.dart';
@@ -9,6 +10,7 @@ import '../../screens/Home/search_screen.dart';
 import '../../services/Secertary Services/beneficiary_service.dart';
 import '../../services/Secertary Services/course_service.dart';
 import '../../services/Secertary Services/trainer_services.dart';
+import '../../core/utils/shared_preferences_helper.dart';
 
 class Search_Bar extends StatelessWidget {
   final String title;
@@ -21,6 +23,19 @@ class Search_Bar extends StatelessWidget {
     required this.searchIconColor,
     required this.fillColor,
   }) : super(key: key);
+
+  Future<void> _navigateToNotifications(BuildContext context) async {
+    final userId = await SharedPreferencesHelper.getUserID();
+    if (userId != null) {
+      context.go('/notifications', extra: {'userId': userId});
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('User ID not found.'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +94,7 @@ class Search_Bar extends StatelessWidget {
                           ),
                         ),
                       );
+                      context.go('/search?q=$query');
                     }
                   },
                   decoration: InputDecoration(
@@ -86,6 +102,7 @@ class Search_Bar extends StatelessWidget {
                     prefixIcon: Icon(Icons.search, color: searchIconColor),
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 15.0, horizontal: 20.0),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(50.0),
                       borderSide: BorderSide.none,
@@ -100,6 +117,7 @@ class Search_Bar extends StatelessWidget {
                 iconSize: 25,
                 icon: Icon(Icons.notifications, color: Colors.black),
                 onPressed: () {},
+                onPressed: () => _navigateToNotifications(context),
               ),
               const SizedBox(width: 20),
               Container(
@@ -120,4 +138,5 @@ class Search_Bar extends StatelessWidget {
       ),
     );
   }
+}
 }

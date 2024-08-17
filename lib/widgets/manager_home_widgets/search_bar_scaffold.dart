@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../Bloc/secertary/student/beneficiary_cubit.dart';
 import '../../Bloc/secertary/course/course_cubit.dart';
 import '../../Bloc/secertary/trainer/trainer_cubit.dart';
+import '../../core/utils/shared_preferences_helper.dart';
+import '../../screens/Home/notifications_screen.dart';
 import '../../screens/Home/search_screen.dart';
 import '../../services/Secertary Services/beneficiary_service.dart';
 import '../../services/Secertary Services/course_service.dart';
@@ -21,6 +24,19 @@ class SearchBarScaffold extends StatelessWidget {
     required this.fillColor,
     Key? key,
   }) : super(key: key);
+
+  Future<void> _navigateToNotifications(BuildContext context) async {
+    final userId = await SharedPreferencesHelper.getUserID();
+    if (userId != null) {
+      context.go('/notifications', extra: {'userId': userId});
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('User ID not found.'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +57,12 @@ class SearchBarScaffold extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
                 ),
+                // IconButton(
+                //   icon: Icon(Icons.arrow_back, color: Colors.black),
+                //   onPressed: () {
+                //     Navigator.of(context).pop();
+                //   },
+                // ),
                 Expanded(
                   child: Text(
                     title,
@@ -89,6 +111,7 @@ class SearchBarScaffold extends StatelessWidget {
                             ),
                           ),
                         );
+                        context.go('/search_bar_scaffold?q=$query');
                       }
                     },
                     decoration: InputDecoration(
@@ -109,6 +132,9 @@ class SearchBarScaffold extends StatelessWidget {
                 iconSize: 25,
                 icon: Icon(Icons.notifications, color: Colors.black),
                 onPressed: () {},
+                onPressed: () {
+                  _navigateToNotifications(context);
+                },
               ),
               SizedBox(width: 20),
               Container(

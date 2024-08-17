@@ -28,16 +28,19 @@ import 'package:project2/services/stafflogin_service.dart';
 import 'Bloc/auth/stafflogin_cubit.dart';
 import 'Bloc/manager/education_cubit.dart';
 import 'Bloc/notification_cubit.dart'; // Import the NotificationCubit
+import 'Bloc/notification_cubit.dart';
 import 'Bloc/secertary/course/course_cubit.dart';
 import 'Bloc/secertary/course/course_detail_cubit.dart';
 import 'Bloc/manager/pending_course_cubit.dart';
 
 import 'Bloc/secertary/student/beneficiary_course_cubit.dart';
 import 'Bloc/secertary/student/beneficiary_cubit.dart';
+import 'Bloc/secertary/student/beneficiary_excel_cubit.dart';
 import 'Bloc/secertary/student/document_cubit.dart';
 import 'Bloc/manager/pending_beneficiary_cubit.dart';
 
 import 'Bloc/secertary/trainer/trainer_cubit.dart';
+import 'core/utils/app_routes.dart';
 import 'core/utils/service_locator.dart';
 import 'core/utils/shared_preferences_helper.dart';
 import 'Bloc/auth/login_cubit.dart';
@@ -81,16 +84,15 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => PendingTrainerCubit(PendingTrainerService())),
         BlocProvider(create: (context) => TrainerCourseCubit(TrainerCourseService())),
         BlocProvider(create: (context) => BeneficiaryCourseCubit(BeneficiaryCourseService())),
-        BlocProvider(
-          create: (context) => EducationCubit(EducationService())..fetchEducationData(),
-        ),
-       // BlocProvider.value(value: notificationCubit),
+        BlocProvider(create: (context) => BeneficiaryExcelCubit(BeneficiaryService())),
+        BlocProvider(create: (context) => EducationCubit(EducationService())..fetchEducationData()),
 
         BlocProvider(
           create: (context) {
             return FeaturedStaffCubit(
               getIt.get<StaffRepoImpl>(),
             )..fetchFeaturedStaff();
+            return FeaturedStaffCubit(getIt.get<StaffRepoImpl>())..fetchFeaturedStaff();
           },
         ),
         BlocProvider(
@@ -98,6 +100,7 @@ class MyApp extends StatelessWidget {
             return GetAllTypeCubit(
               getIt.get<TypeRepoImpl>(),
             )..fetchAllTypes();
+            return GetAllTypeCubit(getIt.get<TypeRepoImpl>())..fetchAllTypes();
           },
         ),
         BlocProvider(
@@ -105,6 +108,7 @@ class MyApp extends StatelessWidget {
             return CreateTypeCubit(
               getIt.get<TypeRepoImpl>(),
             );
+            return CreateTypeCubit(getIt.get<TypeRepoImpl>());
           },
         ),
         BlocProvider(
@@ -112,6 +116,7 @@ class MyApp extends StatelessWidget {
             return CreateCategoryCubit(
               getIt.get<CategoryRepoImpl>(),
             );
+            return CreateCategoryCubit(getIt.get<CategoryRepoImpl>());
           },
         ),
         BlocProvider(
@@ -119,6 +124,7 @@ class MyApp extends StatelessWidget {
             return UpdateCategoryCubit(
               getIt.get<CategoryRepoImpl>(),
             );
+            return UpdateCategoryCubit(getIt.get<CategoryRepoImpl>());
           },
         ),
         BlocProvider(
@@ -126,6 +132,7 @@ class MyApp extends StatelessWidget {
             return RequestItemsCubit(
               getIt.get<CategoryRepoImpl>(),
             )..fetchRequestItems();
+            return RequestItemsCubit(getIt.get<CategoryRepoImpl>())..fetchRequestItems();
           },
         ),
         BlocProvider(
@@ -133,6 +140,7 @@ class MyApp extends StatelessWidget {
             return RequestCategoryCubit(
               getIt.get<CategoryRepoImpl>(),
             )..fetchRequestCategories();
+            return RequestCategoryCubit(getIt.get<CategoryRepoImpl>())..fetchRequestCategories();
           },
         ),
       ],
@@ -175,6 +183,13 @@ class MyApp extends StatelessWidget {
             );
           }
         },
+      child: MaterialApp.router(
+        routerDelegate: AppRouter.router.routerDelegate,
+        routeInformationParser: AppRouter.router.routeInformationParser,
+        routeInformationProvider: AppRouter.router.routeInformationProvider,
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        theme: ThemeManager.appTheme,
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
