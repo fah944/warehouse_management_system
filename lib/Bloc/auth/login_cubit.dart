@@ -18,6 +18,7 @@ class LoginCubit extends Cubit<LoginState> {
       );
       await SharedPreferencesHelper.saveJwtToken(user.token);
       await SharedPreferencesHelper.saveUserRole(user.role);
+      await SharedPreferencesHelper.saveUserID(user.id);
       await SharedPreferencesHelper.saveFcmToken(fcmToken);
 
       print("LoginCubit: Emitting LoginSuccess state with user: $user");

@@ -13,7 +13,6 @@ import '../../../core/utils/shared_preferences_helper.dart';
 import '../../../models/Secertary Model/beneficiary_model.dart';
 import '../../../models/Secertary Model/beneficiary_course_model.dart';
 import '../../../services/Secertary Services/beneficiary_service.dart';
-
 import '../../../widgets/general_widgets/common_scaffold.dart';
 import '../../../widgets/secretary_widgets/details_beneficiary_widgets/beneficiary_details.dart';
 import '../../../widgets/secretary_widgets/details_beneficiary_widgets/document_manager.dart';
@@ -25,8 +24,7 @@ class BeneficiaryDetailsScreen extends StatefulWidget {
   BeneficiaryDetailsScreen({required this.beneficiaryId});
 
   @override
-  _BeneficiaryDetailsScreenState createState() =>
-      _BeneficiaryDetailsScreenState();
+  _BeneficiaryDetailsScreenState createState() => _BeneficiaryDetailsScreenState();
 }
 
 class _BeneficiaryDetailsScreenState extends State<BeneficiaryDetailsScreen> {
@@ -176,7 +174,6 @@ class _BeneficiaryDetailsScreenState extends State<BeneficiaryDetailsScreen> {
                             ...courseState.courses.map((course) {
                               return _buildCourseDetailCard(course);
                             }).toList(),
-
                         ],
                       ),
                     );
@@ -211,7 +208,6 @@ class _BeneficiaryDetailsScreenState extends State<BeneficiaryDetailsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             _buildDetailItem(Icons.book, 'Course Name', course.course.nameCourse),
-       //     _buildDetailItem(Icons.schedule, 'Course Period', course.course.coursePeriod),
             _buildDetailItem(Icons.access_time, 'Status', course.status),
             SizedBox(height: 8),
             Center(
@@ -220,7 +216,7 @@ class _BeneficiaryDetailsScreenState extends State<BeneficiaryDetailsScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                 ),
-                child: Text('Delet From Course', style: TextStyle(color: Colors.white)),
+                child: Text('Delete From Course', style: TextStyle(color: Colors.white)),
               ),
             ),
           ],
