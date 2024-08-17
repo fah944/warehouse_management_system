@@ -9,8 +9,7 @@ import '../../../Bloc/secertary/trainer/trainer_course_cubit.dart';
 import '../../../Bloc/secertary/trainer/trainer_course_state.dart';
 import '../../../core/utils/color_manager.dart';
 import '../../../widgets/general_widgets/common_scaffold.dart';
-import '../Student/beneficiary_details_screen.dart';
-import '../Trainer/trainer_details.dart';
+import 'package:go_router/go_router.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final int courseId;
@@ -145,10 +144,10 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
               ),
             );
 
-            // Re-fetch the beneficiaries to update the list
+
             context.read<BeneficiaryCourseCubit>().fetchBeneficiariesByCourse(widget.courseId);
           });
-          return Container(); // Returning empty container until the state updates
+          return Container();
         } else if (state is BeneficiaryByCourseLoaded) {
           if (state.beneficiary.isEmpty) {
             return Center(child: Text('No beneficiaries registered in this course.'));
@@ -190,15 +189,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
                       shadowColor: ColorManager.blue.withOpacity(0.5),
                     ),
                   ),
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BeneficiaryDetailsScreen(beneficiaryId: beneficiary.id),
-                      ),
-                    );
-
-                    // After returning, refresh the beneficiary data
+                  onTap: (){
+                     context.go('/beneficiary_detail_education/${beneficiary.id}');
                     _fetchData();
                   },
                 ),
@@ -220,7 +212,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
         if (state is TrainerCourseLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (state is TrainerCheckedIn) {
-          // Use a post-frame callback to ensure the UI is updated after the Snackbar
+
           SchedulerBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -238,11 +230,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
               ),
             );
 
-            // Fetch updated course details and trainers after check-in
+
             context.read<CourseDetailCubit>().fetchCourseDetail(widget.courseId);
             context.read<TrainerCourseCubit>().fetchTrainersByCourse(widget.courseId);
           });
-          return Container();  // Returning empty container until the state updates
+          return Container();
         } else if (state is TrainerByCourseLoaded) {
           if (state.trainerCourses.isEmpty) {
             return Center(child: Text('No trainers assigned to this course.'));
@@ -283,15 +275,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
                       shadowColor: ColorManager.blue.withOpacity(0.5),
                     ),
                   ),
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TrainerDetailsScreen(trainerId: trainer.id),
-                      ),
-                    );
-
-                    // After returning, refresh the trainer data
+                  onTap: ()  {
+                    context.go('/trainer_detail_education/${trainer.id}');
                     _fetchData();
                   },
                 ),

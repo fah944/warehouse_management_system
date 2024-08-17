@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../Bloc/manager/pending_beneficiary_state.dart';
 import '../../../Bloc/manager/pending_trainer_cubit.dart';
 import '../../../Bloc/manager/pending_trainer_state.dart';
@@ -79,17 +80,28 @@ class _TranerDetailsManagerScreenState extends State<TranerDetailsManagerScreen>
   }
 
   void _approveRequest(BuildContext context, PendingTrainer? currentRequest) {
+    // if (currentRequest != null) {
+    //   context.read<PendingTrainerCubit>().approveRequest(currentRequest.id!).then((_) {
+    //     context.go('/manager_home?tab=3');
+    //   });
+
     if (currentRequest != null) {
       context.read<PendingTrainerCubit>().approveRequest(currentRequest.id!);
-      Navigator.pop(context);
+      context.go('/manager_home?tab=3');
     }
   }
 
   void _rejectRequest(BuildContext context, PendingTrainer? currentRequest) {
+    // if (currentRequest != null) {
+    //   context.read<PendingTrainerCubit>().rejectRequest(currentRequest.id!).then((_) {
+    //     context.go('/manager_home?tab=3');
+    //   });
+    // }
     if (currentRequest != null) {
       context.read<PendingTrainerCubit>().rejectRequest(currentRequest.id!);
-      Navigator.pop(context);
+      context.go('/manager_home?tab=3');
     }
   }
+
 
 }

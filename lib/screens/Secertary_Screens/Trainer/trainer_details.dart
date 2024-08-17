@@ -27,6 +27,10 @@ class _TrainerDetailsScreenState extends State<TrainerDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    _fetchTrainerData();
+  }
+
+  void _fetchTrainerData() {
     context.read<TrainerCubit>().fetchTrainerDetail(widget.trainerId);
     context.read<CourseCubit>().fetchCourses();
     context.read<TrainerCourseCubit>().fetchTrainerCourseDetail(widget.trainerId);
@@ -41,14 +45,14 @@ class _TrainerDetailsScreenState extends State<TrainerDetailsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Register Trainer in Course'),
+          title: const Text('Register Trainer in Course'),
           content: Form(
             key: _formKey,
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Count Hours'),
+                    decoration: const InputDecoration(labelText: 'Count Hours'),
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value!.isEmpty || int.tryParse(value) == null) {
@@ -63,7 +67,7 @@ class _TrainerDetailsScreenState extends State<TrainerDetailsScreen> {
                   BlocBuilder<CourseCubit, CourseState>(
                     builder: (context, state) {
                       if (state is CourseLoading) {
-                        return CircularProgressIndicator();
+                        return const CircularProgressIndicator();
                       } else if (state is CourseLoaded) {
                         return DropdownButtonFormField<int>(
                           value: selectedCourseId,
@@ -76,7 +80,7 @@ class _TrainerDetailsScreenState extends State<TrainerDetailsScreen> {
                           onChanged: (value) {
                             selectedCourseId = value;
                           },
-                          decoration: InputDecoration(labelText: 'Select Course'),
+                          decoration: const InputDecoration(labelText: 'Select Course'),
                           validator: (value) {
                             if (value == null) {
                               return 'Please select a course';
@@ -97,13 +101,13 @@ class _TrainerDetailsScreenState extends State<TrainerDetailsScreen> {
           ),
           actions: [
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Register'),
+              child: const Text('Register'),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
@@ -133,8 +137,7 @@ class _TrainerDetailsScreenState extends State<TrainerDetailsScreen> {
     return BlocListener<TrainerCubit, TrainerState>(
       listener: (context, state) {
         if (state is TrainerRegisteredInCourse) {
-          context.read<TrainerCubit>().fetchTrainerDetail(widget.trainerId);
-          context.read<TrainerCourseCubit>().fetchTrainerCourseDetail(widget.trainerId);
+          _fetchTrainerData();
         }
       },
       child: BlocBuilder<TrainerCubit, TrainerState>(
@@ -142,7 +145,7 @@ class _TrainerDetailsScreenState extends State<TrainerDetailsScreen> {
           return BlocBuilder<TrainerCourseCubit, TrainerCourseState>(
             builder: (context, trainerCourseState) {
               if (trainerState is TrainerLoading || trainerCourseState is TrainerCourseLoading) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (trainerState is TrainerDetailLoaded) {
                 final trainer = trainerState.trainer;
                 return CommonScaffold(
@@ -158,8 +161,8 @@ class _TrainerDetailsScreenState extends State<TrainerDetailsScreen> {
                           children: [
                             ElevatedButton(
                               onPressed: () => _showCourseRegistrationDialog(context, trainer),
-                              child: Text('Register in a Course',style: TextStyle(color: ColorManager.bc0),),
-                              style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(ColorManager.blue)),
+                              child: const Text('Register in a Course', style: TextStyle(color: ColorManager.bc0)),
+                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(ColorManager.blue)),
                             ),
                           ],
                         ),
@@ -215,21 +218,20 @@ class _TrainerDetailsScreenState extends State<TrainerDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Registered Course',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             _buildDetailItem(Icons.book, 'Course Name', trainerCourse.course.nameCourse),
-      //      _buildDetailItem(Icons.schedule, 'Course Period', trainerCourse.course.coursePeriod),
             _buildDetailItem(Icons.access_time, 'Count Hours', trainerCourse.countHours.toString()),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Center(
               child: ElevatedButton(
                 onPressed: () => _deleteCourseRegistration(trainerCourse.trainerId, trainerCourse.courseId),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                 ),
-                child: Text('Delete From Course', style: TextStyle(color: Colors.white)),
+                child: const Text('Delete From Course', style: TextStyle(color: Colors.white)),
               ),
             ),
           ],
@@ -245,14 +247,14 @@ class _TrainerDetailsScreenState extends State<TrainerDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: ColorManager.blue, size: 24),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorManager.bc5)),
-                SizedBox(height: 4),
-                Text(value, style: TextStyle(fontSize: 16, color: ColorManager.bc4)),
+                Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorManager.bc5)),
+                const SizedBox(height: 4),
+                Text(value, style: const TextStyle(fontSize: 16, color: ColorManager.bc4)),
               ],
             ),
           ),

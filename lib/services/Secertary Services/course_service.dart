@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../core/utils/shared_preferences_helper.dart';
 import '../../models/Secertary Model/course_model.dart';
+import '../../models/notification_data.dart';
 import '../notification_service.dart';
 import '../token_service.dart';
 
@@ -97,14 +98,22 @@ class CourseService {
       );
 
       if (response.statusCode == 200) {
-
         String accessToken = await _tokenService.fetchAccessToken();
-
         String? managerFcmToken = await _tokenService.fetchFcmTokenByRole('manager');
 
         if (managerFcmToken != null) {
+          // Send the notification
           await _notificationService.sendNotification(accessToken, managerFcmToken);
-          print('Notification has sent to Manager FCM token correctly');
+          print('Notification has been sent to Manager FCM token successfully');
+
+          // Store the notification
+          NotificationData notification = NotificationData(
+            fcmToken: managerFcmToken,
+            title: 'New Course Added',
+            body: 'A new course has been added to the system.',
+          );
+
+          await _tokenService.storeNotification(notification);
         } else {
           print('Manager FCM token is null');
         }

@@ -30,7 +30,7 @@ class FirebaseMessagingService {
           action: SnackBarAction(
             label: 'View',
             onPressed: () {
-              Navigator.of(navigatorKey.currentContext!).pushNamed(AppRouter.notifications);
+              //    Navigator.of(navigatorKey.currentContext!).pushNamed(AppRouter.notifications);
             },
 
           ),
