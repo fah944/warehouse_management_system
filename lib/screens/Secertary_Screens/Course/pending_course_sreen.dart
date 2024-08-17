@@ -50,7 +50,6 @@ class _PendingCourseScreenState extends State<PendingCourseScreen> {
                 Navigator.of(context).pop();
                 _fetchPendingRequests();
               } else if (state is CourseError) {
-
                 print("Error With Creating New Course");
               }
             },
@@ -181,7 +180,7 @@ class _PendingCourseScreenState extends State<PendingCourseScreen> {
                           id: 0,
                           nameCourse: nameCourse,
                           coursePeriod: coursePeriod,
-                          sessionDuration:sessionDuration ,
+                          sessionDuration: sessionDuration,
                           sessionsGiven: sessionsGiven,
                           type: type,
                           courseStatus: courseStatus,
@@ -279,7 +278,7 @@ class _PendingCourseScreenState extends State<PendingCourseScreen> {
                                 size: 12,
                               ),
                               onTap: () {
-
+                                // Handle onTap if necessary
                               },
                             ),
                           );

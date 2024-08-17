@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../models/Pending Model/pending_course_model.dart';
 import '../../../core/utils/color_manager.dart';
 import '../../../widgets/general_widgets/common_scaffold.dart';
@@ -79,12 +80,12 @@ class CourseDetailManagerScreen extends StatelessWidget {
 
   void _approveRequest(BuildContext context) {
     context.read<PendingRequestCubit>().approveRequest(pendingRequest.id);
-    Navigator.pop(context);
+    context.go('/manager_home?tab=3');
   }
 
   void _rejectRequest(BuildContext context) {
     context.read<PendingRequestCubit>().rejectRequest(pendingRequest.id);
-    Navigator.pop(context);
+    context.go('/manager_home?tab=3');
   }
 
   Widget _buildDetailItem(IconData icon, String label, String value) {

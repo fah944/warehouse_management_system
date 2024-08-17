@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../Bloc/secertary/student/beneficiary_cubit.dart';
 import '../../../core/utils/color_manager.dart';
 import '../../../models/Secertary Model/beneficiary_model.dart';
 import '../../../widgets/general_widgets/common_scaffold.dart';
-
 import '../../../widgets/secretary_widgets/update_beneficiary_widgets/disability_widget.dart';
 import '../../../widgets/secretary_widgets/update_beneficiary_widgets/educational_attainment_widget.dart';
 import '../../../widgets/secretary_widgets/update_beneficiary_widgets/foreign_language_widget .dart';
@@ -13,8 +13,9 @@ import '../../../widgets/secretary_widgets/update_beneficiary_widgets/profession
 
 class BeneficiaryUpdateScreen extends StatelessWidget {
   final DataBeneficiary beneficiary;
+  final VoidCallback onPop;
 
-  BeneficiaryUpdateScreen({required this.beneficiary});
+  BeneficiaryUpdateScreen({required this.beneficiary, required this.onPop});
 
   @override
   Widget build(BuildContext context) {
@@ -96,13 +97,11 @@ class BeneficiaryUpdateScreen extends StatelessWidget {
                   ]),
                   _buildRow([
                     _buildTextFormField('Address', _address, (value) => _address = value!),
-                    _buildTextFormField('Email', _email, (value) => _email = value!)
+                    _buildEmailTextFormField('Email', _email, (value) => _email = value!)
                   ]),
                   _buildRow([
-                    _buildTextFormField('Number Line', _numberLine, (value) => _numberLine = value!),
-                   _buildTextFormField('Number Phone', _numberPhone, (value) => _numberPhone = value!)
-                //    _buildTextFormField('Number Phone', _numberPhone.toString(), (value) => _numberPhone = int.parse(value!))
-
+                    _buildLineTextFormField('Number Line', _numberLine, (value) => _numberLine = value!),
+                    _buildPhoneTextFormField('Number Phone', _numberPhone, (value) => _numberPhone = value!)
                   ]),
                   _buildRow([
                     _buildTextFormField('Number ID', _numberId, (value) => _numberId = value!),
@@ -124,11 +123,11 @@ class BeneficiaryUpdateScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   DisabilityWidget(
                     title: 'Personal Disabilities',
-                    disabilities: beneficiary.thereIsDisbility?? [],
+                    disabilities: beneficiary.thereIsDisbility ?? [],
                   ),
                   DisabilityWidget(
                     title: 'Family Member Disabilities',
-                    disabilities: beneficiary.thereIsDisbilityFamilyMember?? [],
+                    disabilities: beneficiary.thereIsDisbilityFamilyMember ?? [],
                   ),
                   EducationalAttainmentWidget(
                     educationalAttainments: beneficiary.educationalAttainments ?? [],
@@ -188,10 +187,12 @@ class BeneficiaryUpdateScreen extends StatelessWidget {
                           educationalAttainment: beneficiary.educationalAttainment,
                         );
                         context.read<BeneficiaryCubit>().updateBeneficiary(updatedBeneficiary);
-                        Navigator.of(context).pop();
+                        onPop();
+                        context.go('/secretary_home?tab=1');
                       }
                     },
                   ),
+
                 ],
               ),
             ),
@@ -225,4 +226,53 @@ class BeneficiaryUpdateScreen extends StatelessWidget {
       onSaved: onSaved,
     );
   }
+  Widget _buildEmailTextFormField(String label, String initialValue, FormFieldSetter<String> onSaved) {
+    return TextFormField(
+      initialValue: initialValue,
+      decoration: InputDecoration(labelText: label),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter $label';
+        }
+        else if (!value.contains('@') || !value.endsWith('.com')) {
+          return 'Please enter a valid email address';
+        }
+        return null;
+      },
+      onSaved: onSaved,
+    );
+  }
+  Widget _buildPhoneTextFormField(String label, String initialValue, FormFieldSetter<String> onSaved) {
+    return TextFormField(
+      initialValue: initialValue,
+      decoration: InputDecoration(labelText: label),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter $label';
+        }
+        else if (value.length != 10) {
+          return 'Phone number must be exactly 10 digits';
+        }
+        return null;
+      },
+      onSaved: onSaved,
+    );
+  }
+  Widget _buildLineTextFormField(String label, String initialValue, FormFieldSetter<String> onSaved) {
+    return TextFormField(
+      initialValue: initialValue,
+      decoration: InputDecoration(labelText: label),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter $label';
+        }
+        else if (value.length <= 7) {
+          return 'Phone number must be at least 8 digits';
+        }
+        return null;
+      },
+      onSaved: onSaved,
+    );
+  }
+
 }

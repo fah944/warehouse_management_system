@@ -3,6 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPreferencesHelper {
   static const _jwtTokenKey = 'jwt_token';
   static const _userRoleKey = 'role_const';
+  static const _userIdKey = 'id_const';
+
   static const _fcmTokenKey = 'fcm_token';
   static const _imageFilenameKey = 'image_filename';
   static const _pdfFilenameKey = 'pdf_filename';
@@ -70,5 +72,20 @@ class SharedPreferencesHelper {
   static Future<String?> getPdfFilename() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_pdfFilenameKey);
+  }
+
+  static Future<void> saveUserID(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_userIdKey, id);
+  }
+
+  static Future<int?> getUserID() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_userIdKey);  // Corrected key
+  }
+
+  static Future<void> clearUserID() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_userIdKey);  // Corrected key
   }
 }
