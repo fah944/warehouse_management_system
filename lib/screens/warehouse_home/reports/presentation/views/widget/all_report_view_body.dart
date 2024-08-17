@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../../../core/localization/app_localizations.dart';
 import '../../../../../../core/utils/app_manager.dart';
@@ -47,61 +46,6 @@ class AllReportViewBody extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          /*Tooltip(
-                          message: AppLocalizations.of(context).translate('import_items'),
-                          child: GestureDetector(
-                            onTap: () {
-                              //ImportFromExcelCubit.get(context).pickImage();
-                            },
-                            child: circleIconWidget(
-                                icon: FontAwesomeIcons.fileImport,
-                                backgroundColor: Colors.transparent,
-                                color: ColorManager.blue,
-                                radius: 30.0,
-                                size: 25.0
-                            ),
-                          ),
-                        ),
-                        Tooltip(
-                          message: AppLocalizations.of(context).translate('export_items'),
-                          child: GestureDetector(
-                            onTap: () {
-                              //BlocProvider.of<ExportToExcelCubit>(context).fetchExportToExcel(fields: ["id","name","quantity"]);
-                            },
-                            child: circleIconWidget(
-                                icon: FontAwesomeIcons.fileExport,
-                                backgroundColor: Colors.transparent,
-                                color: ColorManager.blue,
-                                radius: 30.0,
-                                size: 25.0
-                            ),
-                          ),
-                        ),
-                        Tooltip(
-                          message: AppLocalizations.of(context).translate('search'),
-                          child: GestureDetector(
-                            onTap: () {
-                              *//*Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (_, __, ___) => SearchView(
-                                    typeId: typeId,
-                                    categoryId: categoryId,
-                                  ),
-                                  transitionDuration: Duration.zero,
-                                  transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
-                                ),
-                              );*//*
-                            },
-                            child: circleIconWidget(
-                              icon: Icons.search_sharp,
-                              backgroundColor: Colors.transparent,
-                              color: ColorManager.blue,
-                              size: AppSize.s30,
-                              radius: AppSize.s20,
-                            ),
-                          ),
-                        ),*/
                           Tooltip(
                             message: AppLocalizations.of(context).translate('add_report'),
                             child: elevatedbtn(
@@ -110,21 +54,20 @@ class AllReportViewBody extends StatelessWidget {
                                 backgroundColor: ColorManager.orange,
                                 color: ColorManager.bc0,
                               ),
-                              text: AppLocalizations.of(context).translate('add_new_type'),
+                              text: AppLocalizations.of(context).translate('add_new_report'),
                               style: StyleManager.labelMedium(color: ColorManager.bc4),
                               onPressed: () {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return CustomBigDialogFieldWidget(
-                                      title: AppLocalizations.of(context).translate('add_new_type'),
-                                      hintText: AppLocalizations.of(context).translate('enter_name'),
-                                      hintText2: "Enter body",
+                                      title: AppLocalizations.of(context).translate('add_new_report'),
+                                      hintText: AppLocalizations.of(context).translate('enter_title'),
+                                      hintText2: AppLocalizations.of(context).translate('enter_body'),
                                       controller: titleController,
                                       controller2: bodyController,
                                       onPressedIcon: () {
                                         CreateReportCubit.get(context).pickFile();
-                                        //GetFileCubit.get(context).fetchFile(id: allItems.id, ext: );
                                       },
                                       onPressed: () {
                                         final createReportCubit = context.read<CreateReportCubit>();

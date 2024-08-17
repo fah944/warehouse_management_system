@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,15 +12,23 @@ import '../../manager/get_all_category_cubit/get_all_category_cubit.dart';
 import '../../manager/get_all_category_cubit/get_all_category_state.dart';
 import '../../manager/update_category_cubit/update_category_cubit.dart';
 import '../../manager/update_category_cubit/update_category_state.dart';
+import '../all_child_category_view.dart';
 import 'category_grid_view_item.dart';
+import '../../../data/models/get_all_category_model.dart';
 
 class CategoryGridView extends StatelessWidget {
-  const CategoryGridView({Key? key, required this.typeId}) : super(key: key);
+  CategoryGridView({Key? key, required this.typeId}) : super(key: key);
 
   final int typeId;
+  List<GetAllCategoryModel> parentCategory = [];
+  List<GetAllCategoryModel>? allChildCategory = [];
+  List<GetAllCategoryModel>? childCategory = [];
 
   @override
   Widget build(BuildContext context) {
+    parentCategory.clear();
+    allChildCategory!.clear();
+    childCategory!.clear();
     return BlocBuilder<GetAllCategoryCubit, GetAllCategoryState>(
       builder: (context, state) {
         return BlocConsumer<UpdateCategoryCubit, UpdateCategoryState>(
@@ -53,26 +63,45 @@ class CategoryGridView extends StatelessWidget {
                   }
                 },
                 builder: (contextDelete, stateDelete) {
-                  return state.allCategories.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
+                  for(int i = 0; i < state.allCategories.length; i++)
+                  {
+                    state.allCategories[i].parentId != null ? allChildCategory!.add(state.allCategories[i]) : parentCategory.add(state.allCategories[i]);
+                  }
+                  log('parentCategory ${parentCategory.toString()}');
+                  log('childCategory ${allChildCategory.toString()}');
+                  return parentCategory.isEmpty ? Center(child: Center(child: Text(AppLocalizations.of(context).translate('empty_list_message')),),)
                       : GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: state.allCategories.length,
+                    itemCount: parentCategory.length,
                     gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount:6,
                       crossAxisSpacing: 18,
                       mainAxisSpacing: 6,
                     ),
                     itemBuilder: (context,index)=> CategoryGridViewItem(
-                      allCategoryModel: state.allCategories[index],
+                      allCategoryModel: parentCategory[index],
                       onTap: () {
-                        Navigator.push(
+                        childCategory!.clear();
+                        for(int i = 0; i < allChildCategory!.length; i++)
+                        {
+                          if(parentCategory[index].id == allChildCategory![i].parentId) {
+                            childCategory!.add(allChildCategory![i]);
+                          }
+                        }
+                        childCategory!.length == 0 ? Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_)=> AllItemsView(
                               typeId: typeId,
-                              categoryId: state.allCategories[index].id,
+                              categoryId: parentCategory[index].id,
                             ),
+                          ),
+                        )
+                            : Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_)=> AllChildCategoryView(typeId: typeId, childCategory: childCategory!,),
                           ),
                         );
                       },

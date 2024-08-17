@@ -107,19 +107,19 @@ class AllItemViewBodyManager extends StatelessWidget {
                       unselectedLabelColor: ColorManager.bc5,
                       tabs: [
                         Tab(text: 'All Items'),
-                        Tab(text: 'Expiring Items'), // اسم التاب الثاني
-                        Tab(text: 'Expired Items'), // اسم التاب الثاني
+                        Tab(text: 'Expiring Items'),
+                        Tab(text: 'Expired Items'),
                       ],
                     ),
                   ),
                 ),
                 // Add TabBarView for displaying content
-                const Expanded(
+                Expanded(
                   child: TabBarView(
                     children: [
-                      ItemListView(), // القائمة الأولى
-                      ExpiringItemListView(), // القائمة الثانية
-                      ExpiredItemListView(),
+                      ItemListView(typeId: typeId, categoryId: categoryId,),
+                      ExpiringItemListView(typeId: typeId, categoryId: categoryId,),
+                      ExpiredItemListView(typeId: typeId, categoryId: categoryId,),
                     ],
                   ),
                 ),

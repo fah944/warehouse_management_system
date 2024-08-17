@@ -86,6 +86,9 @@
   "item_updated_failed": "Item updated failed",
   "max": "Max: ",
   "min": "Min: ",
+  "check_expiring_successfully": "Check expiring successfully",
+  "check_expiring_failed": "Check expiring failed",
+  "check_expiring": "Check expiring",
 
   "category_title": "Categories",
 
@@ -109,5 +112,12 @@
 
   "add_report": "Add Report",
   "report_deleted_successfully": "Report deleted successfully",
-  "report_deleted_failed": "Report deleted failed"
+  "report_deleted_failed": "Report deleted failed",
+  "get_file_successfully": "Get file successfully",
+  "get_file_failed": "Get file failed",
+  "no_title": "No title",
+  "no_body": "No body",
+  "enter_body": "Enter body",
+  "add_new_report": "Add new report",
+  "enter_title": "Enter title"
 }

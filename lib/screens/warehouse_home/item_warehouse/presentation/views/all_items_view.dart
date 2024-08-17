@@ -5,6 +5,7 @@ import '../../../../../../core/utils/service_locator.dart';
 import '../../../../../core/localization/app_localizations.dart';
 import '../../../home/widget/common_scaffold_wear_house.dart';
 import '../../data/repos/item_repo_impl.dart';
+import '../manager/check_expiring_cubit/check_expiring_cubit.dart';
 import '../manager/delete_item_cubit/delete_item_cubit.dart';
 import '../manager/expired_cubit/expired_cubit.dart';
 import '../manager/expiring_soon_cubit/expiring_soon_cubit.dart';
@@ -71,6 +72,13 @@ class AllItemsView extends StatelessWidget {
                 getIt.get<ItemRepoImpl>(),
               )..fetchExpiredItems(
                   paginate: paginate
+              );
+            },
+          ),
+          BlocProvider(
+            create: (context) {
+              return CheckExpiringCubit(
+                getIt.get<ItemRepoImpl>(),
               );
             },
           ),
